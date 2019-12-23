@@ -2,7 +2,14 @@ package Game;
 
 import java.util.List;
 
-public class Castle {
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
+
+public class Castle extends Sprite {
+	private double minX;
+	private double maxX;
+	private double minY;
+	private double maxY;
 	
 	private int duke;
 	private int treasur;
@@ -13,10 +20,13 @@ public class Castle {
 	private ProductionUnit productionUnit;
 	private Order order;
 	private int door;
-	
-	public Castle(int duke, int treasur, int level, List<Piquier> piquiers, List<Chevalier> chevaliers,
+	public Castle(Pane layer, Image image, double x, double y) {
+		super(layer,image, x, y);
+		
+	}
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level, List<Piquier> piquiers, List<Chevalier> chevaliers,
 			List<Onagre> onagres, ProductionUnit productionUnit, Order order, int door) {
-		super();
+		super(layer,image, x, y);
 		this.duke = duke;
 		this.treasur = treasur;
 		this.level = level;
@@ -82,6 +92,7 @@ public class Castle {
 	public void setDoor(int door) {
 		this.door = door;
 	}
-	
+	public void checkRemovability() {
+	}
 		
 }
