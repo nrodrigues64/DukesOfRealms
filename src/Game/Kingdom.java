@@ -24,6 +24,6 @@ public class Kingdom {
 	public void setCastles(List<Castle> castles) {
 		this.castles = castles;
 	}
-	.
+	
 	
 }
