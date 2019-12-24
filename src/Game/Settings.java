@@ -1,10 +1,12 @@
 package Game;
 
+import java.awt.Toolkit;
+import java.awt.geom.Dimension2D;
 public class Settings {
-
-	public static final double SCENE_WIDTH = 400;
-    public static final double SCENE_HEIGHT = 750;
-	public static final double STATUS_BAR_HEIGHT = 50;
+	static Dimension2D screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	public static final double SCENE_WIDTH = screenSize.getWidth();
+    public static final double SCENE_HEIGHT = screenSize.getHeight() - 70;
+	/*public static final double STATUS_BAR_HEIGHT = 50;
 
 
     public static final double PLAYER_SPEED = 4.0;
@@ -19,6 +21,6 @@ public class Settings {
     
     public static final int FIRE_FREQUENCY_LOW = 1000 * 1000 * 1000; // 1 second in nanoseconds
     public static final int FIRE_FREQUENCY_MEDIUM = 500 * 1000 * 1000; // 0.5 second in nanoseconds
-    public static final int FIRE_FREQUENCY_HIGH = 100 * 1000 * 1000; // 0.1 second in nanoseconds
+    public static final int FIRE_FREQUENCY_HIGH = 100 * 1000 * 1000; // 0.1 second in nanoseconds*/
 
 }

@@ -1,5 +1,6 @@
 package Game;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,9 +23,9 @@ public class Main extends Application {
 	private Random rnd = new Random();
 
 	private Pane playfieldLayer;
-
-	private Image castleImage;
 	
+	private Image castleImage;
+	private Kingdom k;
 	private Castle player;
 	
 	
@@ -37,7 +38,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 
 		root = new Group();
-		scene = new Scene(root, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT + Settings.STATUS_BAR_HEIGHT);
+		scene = new Scene(root, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT);
 		scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
@@ -90,10 +91,16 @@ public class Main extends Application {
 
 
 	private void createPlayer() {
+		Random random = new Random();
+		List<Castle> lc = new ArrayList<>();
+		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
+		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
+		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
+		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
 		double x = (Settings.SCENE_WIDTH - castleImage.getWidth()) / 2.0;
 		double y = Settings.SCENE_HEIGHT * 0.7;
 		player = new Castle(playfieldLayer, castleImage, x, y);
-		
+		k = new Kingdom(player,lc);
 		player.getView().setOnMousePressed(e -> {
 			System.out.println("Click on player");
 			e.consume();
