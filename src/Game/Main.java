@@ -27,6 +27,7 @@ public class Main extends Application {
 	private Pane playfieldLayer;
 	
 	private Image castleImage;
+	private Image castleEnemy;
 	private Image enemyImage;
 	private Kingdom k;
 	private Castle player;
@@ -84,32 +85,54 @@ public class Main extends Application {
 	private void loadGame() {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		enemyImage = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
+		castleEnemy = new Image(getClass().getResource("/images/white_castle.jpg").toExternalForm(), 100,100,true,true);
 		createPlayer();
-		
-		
-		scene.setOnMousePressed(e -> {
-			player.setX(e.getX() - (player.getWidth() / 2));
-			player.setY(e.getY() - (player.getHeight() / 2));
-		});
 	}
 
 
 	private void createPlayer() {
 		Random random = new Random();
 		List<Castle> lc = new ArrayList<>();
-		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
-		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
-		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
-		lc.add(0, new Castle(playfieldLayer,castleImage, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble()));
+		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 20, 1000, 1));
+		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 60, 500, 2));
+		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 88, 150000, 1));
+		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 8 , 10000, 1));
 		double x = (Settings.SCENE_WIDTH - castleImage.getWidth()) / 2.0;
 		double y = Settings.SCENE_HEIGHT * 0.7;
-		player = new Castle(playfieldLayer, castleImage, x, y);
+		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
 		k = new Kingdom(player,lc);
 		player.getView().setOnMousePressed(e -> {
 			System.out.println("Click on player");
 			e.consume();
 		});
-		
+		lc.forEach(sprite -> sprite.getView().setOnContextMenuRequested(e -> {
+				ContextMenu contextMenu = new ContextMenu();
+				String Duke = "Owner : ";
+				Duke = Duke.concat(Integer.toString(sprite.getDuke()));
+				String Treasure = "Treasure : ";
+				Treasure = Treasure.concat(Integer.toString(sprite.getTreasur()));
+				String Level = "Level : ";
+				Level = Level.concat(Integer.toString(sprite.getLevel()));
+				MenuItem duke = new MenuItem(Duke);
+				MenuItem treasure= new MenuItem(Treasure);
+				MenuItem level= new MenuItem(Level);
+				contextMenu.getItems().addAll(duke, treasure, level);
+				contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
+		}));
+		player.getView().setOnContextMenuRequested(e -> {
+			ContextMenu contextMenu = new ContextMenu();
+			String Duke = "Owner : ";
+			Duke = Duke.concat(Integer.toString(player.getDuke()));
+			String Treasure = "Treasure : ";
+			Treasure = Treasure.concat(Integer.toString(player.getTreasur()));
+			String Level = "Level : ";
+			Level = Level.concat(Integer.toString(player.getLevel()));
+			MenuItem duke = new MenuItem(Duke);
+			MenuItem treasure= new MenuItem(Treasure);
+			MenuItem level= new MenuItem(Level);
+			contextMenu.getItems().addAll(duke, treasure, level);
+			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
+		});
 	}
 
 	

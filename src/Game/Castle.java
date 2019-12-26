@@ -22,15 +22,13 @@ public class Castle extends Sprite {
 		super(layer,image, x, y,500);
 		
 	}
-	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level,ProductionUnit productionUnit, Order order, int door) {
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level) {
 		super(layer,image, x, y,500);
 		this.duke = duke;
 		this.treasur = treasur;
 		this.level = level;
 		
-		this.productionUnit = productionUnit;
-		this.order = order;
-		this.door = door;
+		
 	}
 	public int getDuke() {
 		return duke;
