@@ -1,22 +1,37 @@
 package Game;
 
-public class Troops {
+import SampleGame.Settings;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
+
+public class Troops extends Sprite {
 	private String name;
 	private int productionCost;
 	private int productionTime;
-	private int speed;
+	private double speed;
 	private int health;
 	private int damages;
+	private double maxY;
 	
-	public Troops(String name, int productionCost, int productionTime, int speed, int health, int damages) {
-		super();
+	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
+			double speed, int health, int damages) {
+		super(layer, image, x, y,50);
+		setDy(speed);
 		this.name = name;
 		this.productionCost = productionCost;
 		this.productionTime = productionTime;
 		this.speed = speed;
 		this.health = health;
 		this.damages = damages;
+		maxY = Settings.SCENE_HEIGHT - image.getHeight();
 	}
+	public double getMaxY() {
+		return maxY;
+	}
+	public void setMaxY(double maxY) {
+		this.maxY = maxY;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -35,10 +50,10 @@ public class Troops {
 	public void setProductionTime(int productionTime) {
 		this.productionTime = productionTime;
 	}
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 	public int getHealth() {
@@ -54,5 +69,9 @@ public class Troops {
 		this.damages = damages;
 	}
 	
-	
+	public void checkRemovability() {
+
+		if (getY() > maxY || !isAlive())
+			remove();
+	}
 }

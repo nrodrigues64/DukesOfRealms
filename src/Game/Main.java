@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import SampleGame.Enemy;
+import SampleGame.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,9 +27,10 @@ public class Main extends Application {
 	private Pane playfieldLayer;
 	
 	private Image castleImage;
+	private Image enemyImage;
 	private Kingdom k;
 	private Castle player;
-	
+	private List<Troops> enemies = new ArrayList<>();
 	
 	private Scene scene;
 	private AnimationTimer gameLoop;
@@ -57,17 +60,18 @@ public class Main extends Application {
 
 				
 
-				
+				spawnEnemies(true);
 				// movement
 				player.move();
-				
+				enemies.forEach(sprite -> sprite.move());
 				
 
 				// update sprites in scene
 				player.updateUI();
+				enemies.forEach(sprite -> sprite.updateUI());
 				
-				
-
+				enemies.forEach(sprite -> sprite.checkRemovability());
+				removeSprites(enemies);
 				
 			}
 
@@ -79,7 +83,7 @@ public class Main extends Application {
 
 	private void loadGame() {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
-		
+		enemyImage = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
 		createPlayer();
 		
 		
@@ -109,7 +113,16 @@ public class Main extends Application {
 	}
 
 	
-
+	private void spawnEnemies(boolean random) {
+		if (random && rnd.nextInt(Settings.ENEMY_SPAWN_RANDOMNESS) != 0) {
+			return;
+		}
+		double speed = rnd.nextDouble() * 3 + 1.0;
+		double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - enemyImage.getWidth());
+		double y = -enemyImage.getHeight()*2;
+		Troops enemy = new Troops(playfieldLayer, enemyImage, x, y, "Chevalier", 5, 2,speed, 50, 20);
+		enemies.add(enemy);
+	}
 	
 
 	private void removeSprites(List<? extends Sprite> spriteList) {
