@@ -93,10 +93,11 @@ public class Main extends Application {
 	private void createPlayer() {
 		Random random = new Random();
 		List<Castle> lc = new ArrayList<>();
-		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 20, 1000, 1));
-		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 60, 500, 2));
-		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 88, 150000, 1));
-		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 8 , 10000, 1));
+		for( int i = 0; i < random.nextInt(6); i++)
+		{
+			lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), random.nextInt(1000), random.nextInt(1000000), 1));
+		}
+		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 666, random.nextInt(1000000), 1));
 		double x = (Settings.SCENE_WIDTH - castleImage.getWidth()) / 2.0;
 		double y = Settings.SCENE_HEIGHT * 0.7;
 		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
@@ -117,6 +118,15 @@ public class Main extends Application {
 				MenuItem treasure= new MenuItem(Treasure);
 				MenuItem level= new MenuItem(Level);
 				contextMenu.getItems().addAll(duke, treasure, level);
+				if(sprite.getDuke() == player.getDuke())
+				{
+					MenuItem ally = new MenuItem("Amie");
+					contextMenu.getItems().add(ally);
+				} else {
+					MenuItem attack = new MenuItem("Attaquer");
+					contextMenu.getItems().add(attack);
+				}
+				
 				contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		}));
 		player.getView().setOnContextMenuRequested(e -> {
