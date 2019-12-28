@@ -32,7 +32,7 @@ public class Main extends Application {
 	private Kingdom k;
 	private Castle player;
 	private List<Troops> enemies = new ArrayList<>();
-	
+	private List<Castle> lc = new ArrayList<>();
 	private Scene scene;
 	private AnimationTimer gameLoop;
 	
@@ -92,7 +92,7 @@ public class Main extends Application {
 
 	private void createPlayer() {
 		Random random = new Random();
-		List<Castle> lc = new ArrayList<>();
+		
 		for( int i = 0; i < random.nextInt(6); i++)
 		{
 			lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), random.nextInt(1000), random.nextInt(1000000), 1));
@@ -102,10 +102,7 @@ public class Main extends Application {
 		double y = Settings.SCENE_HEIGHT * 0.7;
 		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
 		k = new Kingdom(player,lc);
-		player.getView().setOnMousePressed(e -> {
-			System.out.println("Click on player");
-			e.consume();
-		});
+		
 		lc.forEach(sprite -> sprite.getView().setOnContextMenuRequested(e -> {
 				ContextMenu contextMenu = new ContextMenu();
 				String Duke = "Owner : ";
@@ -120,11 +117,16 @@ public class Main extends Application {
 				contextMenu.getItems().addAll(duke, treasure, level);
 				if(sprite.getDuke() == player.getDuke())
 				{
+					MenuItem levelup = new MenuItem("Level Up");
+					levelup.setOnAction(evt -> sprite.levelUp());
+					contextMenu.getItems().add(levelup);
 					MenuItem ally = new MenuItem("Amie");
 					contextMenu.getItems().add(ally);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
+					attack.setOnAction(evt -> player.attack(sprite, 0));
 					contextMenu.getItems().add(attack);
+					
 				}
 				
 				contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
@@ -140,7 +142,10 @@ public class Main extends Application {
 			MenuItem duke = new MenuItem(Duke);
 			MenuItem treasure= new MenuItem(Treasure);
 			MenuItem level= new MenuItem(Level);
-			contextMenu.getItems().addAll(duke, treasure, level);
+			MenuItem levelup = new MenuItem("Level Up");
+			levelup.setOnAction(evt -> player.levelUp());
+			contextMenu.getItems().add(levelup);
+			contextMenu.getItems().addAll(duke, treasure, level,levelup);
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
@@ -150,10 +155,13 @@ public class Main extends Application {
 		if (random && rnd.nextInt(Settings.ENEMY_SPAWN_RANDOMNESS) != 0) {
 			return;
 		}
+		System.out.println("f");
 		double speed = rnd.nextDouble() * 3 + 1.0;
-		double x = rnd.nextDouble() * (Settings.SCENE_WIDTH - enemyImage.getWidth());
-		double y = -enemyImage.getHeight()*2;
+		double x =  (Settings.SCENE_WIDTH - castleImage.getWidth()) / 2.0;
+		double y = Settings.SCENE_HEIGHT * 0.7;
 		Troops enemy = new Troops(playfieldLayer, enemyImage, x, y, "Chevalier", 5, 2,speed, 50, 20);
+		enemy.setxTarget(lc.get(0).getX());
+		enemy.setyTarget(lc.get(0).getY());
 		enemies.add(enemy);
 	}
 	

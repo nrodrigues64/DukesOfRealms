@@ -70,5 +70,22 @@ public class Castle extends Sprite {
 	}
 	public void checkRemovability() {
 	}
-		
+	
+	public void attack(Castle c, int nbTroupe)
+	{
+		System.out.println(this.getDuke() + " attaque " + c.getDuke() + " avec " + nbTroupe);
+	}
+	
+	public void levelUp()
+	{
+		if(this.getTreasur() < 1000*(this.getLevel()+1))
+		{
+			System.out.println("Trésor insuffisant.");
+		} else {
+			int tmp = 100+50*(this.getLevel()+1);
+			System.out.println("L'amélioration prendra " + tmp + "tours.");
+			this.setLevel(this.getLevel()+1);
+			this.setTreasur(this.getTreasur()-1000*(this.getLevel()+1));
+		}
+	}
 }

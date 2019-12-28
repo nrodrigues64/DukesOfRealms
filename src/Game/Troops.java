@@ -12,11 +12,17 @@ public class Troops extends Sprite {
 	private int health;
 	private int damages;
 	private double maxY;
-	
+	private double xTarget;
+	private double yTarget;
+	public void setxTarget(double xTarget) {
+		this.xTarget = xTarget;
+	}
+	public void setyTarget(double yTarget) {
+		this.yTarget = yTarget;
+	}
 	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
 			double speed, int health, int damages) {
 		super(layer, image, x, y,50);
-		setDy(speed);
 		this.name = name;
 		this.productionCost = productionCost;
 		this.productionTime = productionTime;
@@ -71,7 +77,37 @@ public class Troops extends Sprite {
 	
 	public void checkRemovability() {
 
-		if (getY() > maxY || !isAlive())
+		if ( !(x > (xTarget + 1) || x < (xTarget - 1)) && !(y > (yTarget + 1) || y < (yTarget - 1)) )
+			
 			remove();
+	}
+	
+	public void move()
+	{
+		
+		if(x > (xTarget + 1) || x < (xTarget - 1)) {
+			if(x < this.xTarget && x + speed < this.xTarget)
+			{
+				x += speed;
+			} else if(x < this.xTarget && x + speed > this.xTarget) {
+				x++;
+			}  else if(x > this.xTarget && x + speed > this.xTarget) {
+				x -= speed;
+			} else if(x < this.xTarget && x + speed > this.xTarget) {
+				x--;
+			}
+		}
+		if(y > (yTarget + 1) || y < (yTarget - 1)) {
+			if(y < this.yTarget && y + speed < this.yTarget)
+			{
+				y += speed;
+			} else if(y < this.yTarget && y + speed > this.yTarget) {
+				y++;
+			} else if(y > this.yTarget && y + speed > this.yTarget) {
+				y -= speed;
+			} else if(y < this.yTarget && y + speed > this.yTarget) {
+				y--;
+			}
+		}
 	}
 }
