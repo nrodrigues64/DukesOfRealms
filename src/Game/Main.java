@@ -95,12 +95,15 @@ public class Main extends Application {
 		
 		for( int i = 0; i < random.nextInt(6); i++)
 		{
-			lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), random.nextInt(1000), random.nextInt(1000000), 1));
+			Castle c = new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), random.nextInt(1000), random.nextInt(1000000), 1);
+			c.checkBounds();
+			lc.add(0, c);
 		}
 		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 666, random.nextInt(1000000), 1));
-		double x = (Settings.SCENE_WIDTH - castleImage.getWidth()) / 2.0;
-		double y = Settings.SCENE_HEIGHT * 0.7;
+		double x = random.nextInt((int)Settings.SCENE_WIDTH);
+		double y = random.nextInt((int)Settings.SCENE_HEIGHT);
 		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
+		player.checkBounds();
 		k = new Kingdom(player,lc);
 		
 		lc.forEach(sprite -> sprite.getView().setOnContextMenuRequested(e -> {
@@ -157,8 +160,8 @@ public class Main extends Application {
 		}
 		System.out.println("f");
 		double speed = rnd.nextDouble() * 3 + 1.0;
-		double x =  (Settings.SCENE_WIDTH - castleImage.getWidth()) / 2.0;
-		double y = Settings.SCENE_HEIGHT * 0.7;
+		double x =  player.x;
+		double y = player.y;
 		Troops enemy = new Troops(playfieldLayer, enemyImage, x, y, "Chevalier", 5, 2,speed, 50, 20);
 		enemy.setxTarget(lc.get(0).getX());
 		enemy.setyTarget(lc.get(0).getY());
