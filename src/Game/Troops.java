@@ -1,22 +1,43 @@
 package Game;
 
-public class Troops {
+import SampleGame.Settings;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
+
+public class Troops extends Sprite {
 	private String name;
 	private int productionCost;
 	private int productionTime;
-	private int speed;
+	private double speed;
 	private int health;
 	private int damages;
-	
-	public Troops(String name, int productionCost, int productionTime, int speed, int health, int damages) {
-		super();
+	private double maxY;
+	private double xTarget;
+	private double yTarget;
+	public void setxTarget(double xTarget) {
+		this.xTarget = xTarget;
+	}
+	public void setyTarget(double yTarget) {
+		this.yTarget = yTarget;
+	}
+	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
+			double speed, int health, int damages) {
+		super(layer, image, x, y,50);
 		this.name = name;
 		this.productionCost = productionCost;
 		this.productionTime = productionTime;
 		this.speed = speed;
 		this.health = health;
 		this.damages = damages;
+		maxY = Settings.SCENE_HEIGHT - image.getHeight();
 	}
+	public double getMaxY() {
+		return maxY;
+	}
+	public void setMaxY(double maxY) {
+		this.maxY = maxY;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -35,10 +56,10 @@ public class Troops {
 	public void setProductionTime(int productionTime) {
 		this.productionTime = productionTime;
 	}
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 	public int getHealth() {
@@ -54,5 +75,39 @@ public class Troops {
 		this.damages = damages;
 	}
 	
+	public void checkRemovability() {
+
+		if ( !(x > (xTarget + 1) || x < (xTarget - 1)) && !(y > (yTarget + 1) || y < (yTarget - 1)) )
+			
+			remove();
+	}
 	
+	public void move()
+	{
+		
+		if(x > (xTarget + 1) || x < (xTarget - 1)) {
+			if(x < this.xTarget && x + speed < this.xTarget)
+			{
+				x += speed;
+			} else if(x < this.xTarget && x + speed > this.xTarget) {
+				x++;
+			}  else if(x > this.xTarget && x + speed > this.xTarget) {
+				x -= speed;
+			} else if(x < this.xTarget && x + speed > this.xTarget) {
+				x--;
+			}
+		}
+		if(y > (yTarget + 1) || y < (yTarget - 1)) {
+			if(y < this.yTarget && y + speed < this.yTarget)
+			{
+				y += speed;
+			} else if(y < this.yTarget && y + speed > this.yTarget) {
+				y++;
+			} else if(y > this.yTarget && y + speed > this.yTarget) {
+				y -= speed;
+			} else if(y < this.yTarget && y + speed > this.yTarget) {
+				y--;
+			}
+		}
+	}
 }

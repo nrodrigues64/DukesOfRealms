@@ -9,7 +9,7 @@ public abstract class Sprite {
     private ImageView imageView;
 
     private Pane layer;
-
+    private int health;
     protected double x;
     protected double y;
 
@@ -21,12 +21,14 @@ public abstract class Sprite {
     private double w;
     private double h;
 
-    public Sprite(Pane layer, Image image, double x, double y) {
+    public Sprite(Pane layer, Image image, double x, double y, int health) {
 
-        this.layer = layer;
+    	this.layer = layer;
         this.x = x;
         this.y = y;
 
+        this.health = health;
+        
 
         this.imageView = new ImageView(image);
         this.imageView.relocate(x, y);
@@ -121,5 +123,8 @@ public abstract class Sprite {
     }
 
     public abstract void checkRemovability();
-
+    
+    public boolean isAlive() {
+        return health > 0;
+    }
 }

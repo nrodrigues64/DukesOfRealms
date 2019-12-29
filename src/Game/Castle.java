@@ -2,6 +2,7 @@ package Game;
 
 import java.util.List;
 
+import SampleGame.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -14,28 +15,38 @@ public class Castle extends Sprite {
 	private int duke;
 	private int treasur;
 	private int level;
-	private List<Piquier> piquiers;
-	private List<Chevalier> chevaliers;
-	private List<Onagre> onagres;
+	
 	private ProductionUnit productionUnit;
 	private Order order;
 	private int door;
 	public Castle(Pane layer, Image image, double x, double y) {
-		super(layer,image, x, y);
-		
+		super(layer,image, x, y,500);
+		init();
 	}
-	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level, List<Piquier> piquiers, List<Chevalier> chevaliers,
-			List<Onagre> onagres, ProductionUnit productionUnit, Order order, int door) {
-		super(layer,image, x, y);
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level) {
+		super(layer,image, x, y,500);
 		this.duke = duke;
 		this.treasur = treasur;
 		this.level = level;
-		this.piquiers = piquiers;
-		this.chevaliers = chevaliers;
-		this.onagres = onagres;
-		this.productionUnit = productionUnit;
-		this.order = order;
-		this.door = door;
+		init();
+		
+	}
+	private void init() {
+		// calculate movement bounds of the player ship
+		// allow half of the player to be outside of the screen
+		minX = 0 + getHeight()*2;
+		maxX = Settings.SCENE_WIDTH - getWidth();
+		minY = 0;
+		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
+	}
+	public void checkBounds() {
+		// vertical
+		y = y < minY ? minY : y;
+		y = y > maxY ? maxY : y;
+
+		// horizontal
+		x = x < minX ? minX : x;
+		x = x > maxX ? maxX : x;
 	}
 	public int getDuke() {
 		return duke;
@@ -56,24 +67,7 @@ public class Castle extends Sprite {
 		this.level = level;
 	}
 	
-	public List<Piquier> getPiquiers() {
-		return piquiers;
-	}
-	public void setPiquiers(List<Piquier> piquiers) {
-		this.piquiers = piquiers;
-	}
-	public List<Chevalier> getChevaliers() {
-		return chevaliers;
-	}
-	public void setChevaliers(List<Chevalier> chevaliers) {
-		this.chevaliers = chevaliers;
-	}
-	public List<Onagre> getOnagres() {
-		return onagres;
-	}
-	public void setOnagres(List<Onagre> onagres) {
-		this.onagres = onagres;
-	}
+	
 	public ProductionUnit getProductionUnit() {
 		return productionUnit;
 	}
@@ -94,5 +88,22 @@ public class Castle extends Sprite {
 	}
 	public void checkRemovability() {
 	}
-		
+	
+	public void attack(Castle c, int nbTroupe)
+	{
+		System.out.println(this.getDuke() + " attaque " + c.getDuke() + " avec " + nbTroupe);
+	}
+	
+	public void levelUp()
+	{
+		if(this.getTreasur() < 1000*(this.getLevel()+1))
+		{
+			System.out.println("Trésor insuffisant.");
+		} else {
+			int tmp = 100+50*(this.getLevel()+1);
+			System.out.println("L'amélioration prendra " + tmp + "tours.");
+			this.setLevel(this.getLevel()+1);
+			this.setTreasur(this.getTreasur()-1000*(this.getLevel()+1));
+		}
+	}
 }
