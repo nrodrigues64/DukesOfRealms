@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import SampleGame.Enemy;
+
 import SampleGame.Settings;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -92,18 +92,24 @@ public class Main extends Application {
 
 	private void createPlayer() {
 		Random random = new Random();
-		
-		for( int i = 0; i < random.nextInt(6); i++)
-		{
-			Castle c = new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), random.nextInt(1000), random.nextInt(1000000), 1);
-			c.checkBounds();
-			lc.add(0, c);
-		}
-		lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 666, random.nextInt(1000000), 1));
 		double x = random.nextInt((int)Settings.SCENE_WIDTH);
 		double y = random.nextInt((int)Settings.SCENE_HEIGHT);
 		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
 		player.checkBounds();
+		lc.add(0, player);
+		
+		for( int i = 0; i < random.nextInt(20); i++)
+		{
+			double x1 = (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10);
+			double y1 = Settings.SCENE_HEIGHT * random.nextDouble();
+			if(check_castle(lc,x1,y1)) {
+				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(1000000), 1);
+				c.checkBounds();
+				lc.add(c);
+			}
+		}
+		player = lc.remove(0);
+		
 		k = new Kingdom(player,lc);
 		
 		lc.forEach(sprite -> sprite.getView().setOnContextMenuRequested(e -> {
@@ -168,7 +174,37 @@ public class Main extends Application {
 		enemies.add(enemy);
 	}
 	
+	//check if a castle can be add at this position
+	private boolean check_castle(List<Castle> lc, double x, double y) {
+		boolean in = true;
+		// 250 au lieu de 150 pour avoir de l'espace entre chateau
+		double x1 = x + 150;
+		double y1 = y + 150;
 
+		double xmid = (x + x1) / 2;
+		double ymid = (y + y1) / 2;
+		for (int i = 0; i < lc.size(); i++) {
+			// ici aussi les -100 et + 250 c'est pour avoir une marge
+			double xx = lc.get(i).getX() - 100;
+			double xx1 = xx + 250;
+			double yy = lc.get(i).getY() - 100;
+			double yy1 = yy + 250;
+
+			boolean a = x <= xx1 && x >= xx && y <= yy1 && y >= yy;
+			boolean b = x1 <= xx1 && x1 >= xx && y <= yy1 && y >= yy;
+			boolean c = x <= xx1 && x >= xx && y1 <= yy1 && y1 >= yy;
+			boolean d = x1 <= xx1 && x1 >= xx && y1 <= yy1 && y1 >= yy;
+			boolean mid = xmid <= xx1 && xmid >= xx && ymid <= yy1 && ymid >= yy;
+
+			in = a || b || c || d || mid;
+			if (in) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+		
 	private void removeSprites(List<? extends Sprite> spriteList) {
 		Iterator<? extends Sprite> iter = spriteList.iterator();
 		while (iter.hasNext()) {

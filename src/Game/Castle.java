@@ -34,9 +34,9 @@ public class Castle extends Sprite {
 	private void init() {
 		// calculate movement bounds of the player ship
 		// allow half of the player to be outside of the screen
-		minX = 0 + getHeight()*2;
-		maxX = Settings.SCENE_WIDTH - getWidth();
-		minY = 0;
+		minX = 0 + getWidth()*2;
+		maxX = Settings.SCENE_WIDTH - getWidth()*2;
+		minY = 0 + getHeight()*2;
 		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
 	}
 	public void checkBounds() {
