@@ -2,6 +2,7 @@ package Game;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -17,9 +18,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.event.ActionEvent;
+import javafx.scene.control.ButtonBase;
+import javafx.event.EventHandler;
+
+import java.awt.Frame;
+import java.awt.Insets;
+import java.awt.Label;
+import java.awt.TextField;
+
+
+
+
+
 
 public class Main extends Application {
 	private Random rnd = new Random();
@@ -32,9 +48,10 @@ public class Main extends Application {
 	private Kingdom k;
 	private Castle player;
 	private List<Troops> enemies = new ArrayList<>();
-	
 	private Scene scene;
 	private AnimationTimer gameLoop;
+	private HashMap<String, Boolean> currentlyActiveKeys = new HashMap<>();
+	static boolean pause = false;
 	
 	Group root;
 
@@ -52,6 +69,19 @@ public class Main extends Application {
 		playfieldLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
 		
+		//Detection touche pressée pour la pause
+		scene.setOnKeyPressed(event -> {
+            String codeString = event.getCode().toString();
+            if (!currentlyActiveKeys.containsKey(codeString)) {
+                currentlyActiveKeys.put(codeString, true);
+            }
+        });
+        scene.setOnKeyReleased(event -> 
+            currentlyActiveKeys.remove(event.getCode().toString())
+        );
+        //test
+		
+		
 		loadGame();
 		
 		gameLoop = new AnimationTimer() {
@@ -60,7 +90,12 @@ public class Main extends Application {
 				
 
 				
-
+				if (removeActiveKey("P")) {
+                    System.out.println("game paused");
+                    pause = !pause;
+                }
+				if (!pause) {
+				
 				spawnEnemies(true);
 				// movement
 				player.move();
@@ -73,6 +108,7 @@ public class Main extends Application {
 				
 				enemies.forEach(sprite -> sprite.checkRemovability());
 				removeSprites(enemies);
+				}
 				
 			}
 
@@ -81,7 +117,18 @@ public class Main extends Application {
 		};
 		gameLoop.start();
 	}
+    private boolean removeActiveKey(String codeString) {
+        Boolean isActive = currentlyActiveKeys.get(codeString);
 
+        if (isActive != null && isActive) {
+            currentlyActiveKeys.put(codeString, false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+	
+	
 	private void loadGame() {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		enemyImage = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
@@ -95,20 +142,24 @@ public class Main extends Application {
 		List<Castle> lc = new ArrayList<>();
 		int n =  random.nextInt(20);
 		
+		
+		//création du player avant tout et ajout a la liste lc 
 		double x1 = (Settings.SCENE_WIDTH -150) / 2.0;
 		double y1 = Settings.SCENE_HEIGHT * 0.7;
 		player = new Castle(playfieldLayer, castleImage, x1, y1,666, 99999, 1);
 		lc.add(player);
-		for( int i = 0; i <10; i++)
+		int i = 0;
+		while(i<5)
 		{
+			//changement de l'aléatoire
 			double x = random.nextInt((1130) + 1);
 			double y = random.nextInt((650) + 1);
 			//double x = (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10);
 			//double y = (Settings.SCENE_HEIGHT - castleImage.getHeight())/ random.nextInt(10);
-			if(check_castle(lc, x, y))
+			if(check_castle(lc, x, y)) {
 					lc.add(0, new Castle(playfieldLayer,castleEnemy, x, y,i, random.nextInt(1000000), 1));
+					i++;}
 		}
-		//lc.add(0, new Castle(playfieldLayer,castleEnemy, (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10), Settings.SCENE_HEIGHT * random.nextDouble(), 666, random.nextInt(1000000), 1));
 		double x = (Settings.SCENE_WIDTH -150) / 2.0;
 		double y = Settings.SCENE_HEIGHT * 0.7;
 		//player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
@@ -148,10 +199,37 @@ public class Main extends Application {
 			Treasure = Treasure.concat(Integer.toString(player.getTreasur()));
 			String Level = "Level : ";
 			Level = Level.concat(Integer.toString(player.getLevel()));
+			String chevaliers = "chevaliers : ";
+			chevaliers = chevaliers.concat(Integer.toString(player.getChevalier()));
 			MenuItem duke = new MenuItem(Duke);
 			MenuItem treasure= new MenuItem(Treasure);
 			MenuItem level= new MenuItem(Level);
-			contextMenu.getItems().addAll(duke, treasure, level);
+			MenuItem chevalier= new MenuItem(chevaliers);
+			
+		   
+	        
+			MenuItem former = new MenuItem("Former un chevalier");
+			former.setOnAction(new EventHandler<ActionEvent>() {
+				 public void handle(ActionEvent e) {
+						ContextMenu contextMenu2 = new ContextMenu();
+						player.incChevalier();
+					e.consume();
+				}});
+			MenuItem former5 = new MenuItem("Former 5 chevaliers");
+			former5.setOnAction(new EventHandler<ActionEvent>() {
+				 public void handle(ActionEvent e) {
+						ContextMenu contextMenu2 = new ContextMenu();
+						player.incWaitingList(4);;
+					e.consume();
+				}});
+			MenuItem former10 = new MenuItem("Former 10 chevaliers");
+			former10.setOnAction(new EventHandler<ActionEvent>() {
+				 public void handle(ActionEvent e) {
+						ContextMenu contextMenu2 = new ContextMenu();
+						player.incWaitingList(9);;
+					e.consume();
+				}});
+			contextMenu.getItems().addAll(duke, treasure, level, chevalier,former,former5, former10);
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
@@ -178,7 +256,7 @@ public class Main extends Application {
 		boolean d = x1 <= xx1 && x1 >= xx && y1 <= yy1 && y1 >= yy;
 		boolean mid = xmid <= xx1 && xmid >= xx && ymid <= yy1 && ymid >= yy;
 		
-		
+		//si l'un des coin de la nouvelle image est dans une des images deja présent, on retourne faux et l'affichage ne se fait pas
 		in = a || b || c || d || mid;
 		if (in) { return false; }
 		}
