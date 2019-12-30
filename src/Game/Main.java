@@ -5,7 +5,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
+import javafx.event.ActionEvent;
+import javafx.scene.control.ButtonBase;
+import javafx.event.EventHandler;
+
+import java.awt.Frame;
+import java.awt.Insets;
+import java.awt.Label;
+import java.awt.TextField;
 
 import SampleGame.Settings;
 import javafx.animation.AnimationTimer;
@@ -35,7 +56,8 @@ public class Main extends Application {
 	private List<Castle> lc = new ArrayList<>();
 	private Scene scene;
 	private AnimationTimer gameLoop;
-	
+	private HashMap<String, Boolean> currentlyActiveKeys = new HashMap<>();
+	static boolean pause = false;
 	Group root;
 
 	@Override
@@ -51,7 +73,15 @@ public class Main extends Application {
 		// create layers
 		playfieldLayer = new Pane();
 		root.getChildren().add(playfieldLayer);
-		
+		scene.setOnKeyPressed(event -> {
+            String codeString = event.getCode().toString();
+            if (!currentlyActiveKeys.containsKey(codeString)) {
+                currentlyActiveKeys.put(codeString, true);
+            }
+        });
+        scene.setOnKeyReleased(event -> 
+            currentlyActiveKeys.remove(event.getCode().toString())
+        );
 		loadGame();
 		
 		gameLoop = new AnimationTimer() {
@@ -60,28 +90,47 @@ public class Main extends Application {
 				
 
 				
-
-				spawnEnemies(true);
-				// movement
-				player.move();
-				enemies.forEach(sprite -> sprite.move());
-				
-
-				// update sprites in scene
-				player.updateUI();
-				enemies.forEach(sprite -> sprite.updateUI());
-				
-				enemies.forEach(sprite -> sprite.checkRemovability());
-				removeSprites(enemies);
+				if (removeActiveKey("P")) {
+                    System.out.println("game paused");
+                    pause = !pause;
+                }
+				if (!pause) {
+					spawnEnemies(true);
+					// movement
+					player.move();
+					enemies.forEach(sprite -> sprite.move());
+					
+	
+					// update sprites in scene
+					player.updateUI();
+					enemies.forEach(sprite -> sprite.updateUI());
+					
+					enemies.forEach(sprite -> sprite.checkRemovability());
+					removeSprites(enemies);
+				}
 				
 			}
+			
 
+		
 			
 
 		};
 		gameLoop.start();
 	}
+	
+	
+	private boolean removeActiveKey(String codeString) {
+        Boolean isActive = currentlyActiveKeys.get(codeString);
 
+        if (isActive != null && isActive) {
+            currentlyActiveKeys.put(codeString, false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+	
 	private void loadGame() {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		enemyImage = new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true);
@@ -98,7 +147,8 @@ public class Main extends Application {
 		player.checkBounds();
 		lc.add(0, player);
 		
-		for( int i = 0; i < random.nextInt(20); i++)
+		int i = 0;
+		while(i < 5)
 		{
 			double x1 = (Settings.SCENE_WIDTH - castleImage.getWidth())/ random.nextInt(10);
 			double y1 = Settings.SCENE_HEIGHT * random.nextDouble();
@@ -106,7 +156,9 @@ public class Main extends Application {
 				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(1000000), 1);
 				c.checkBounds();
 				lc.add(c);
+				i++;
 			}
+			
 		}
 		player = lc.remove(0);
 		
@@ -120,10 +172,14 @@ public class Main extends Application {
 				Treasure = Treasure.concat(Integer.toString(sprite.getTreasur()));
 				String Level = "Level : ";
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
+				String chevaliers = "chevaliers : ";
+				chevaliers = chevaliers.concat(Integer.toString(player.getChevaliers()));
+				MenuItem chevalier= new MenuItem(chevaliers);
 				MenuItem duke = new MenuItem(Duke);
 				MenuItem treasure= new MenuItem(Treasure);
 				MenuItem level= new MenuItem(Level);
-				contextMenu.getItems().addAll(duke, treasure, level);
+				contextMenu.getItems().addAll(duke, treasure, level, chevalier);
+				
 				if(sprite.getDuke() == player.getDuke())
 				{
 					MenuItem levelup = new MenuItem("Level Up");
@@ -131,6 +187,28 @@ public class Main extends Application {
 					contextMenu.getItems().add(levelup);
 					MenuItem ally = new MenuItem("Amie");
 					contextMenu.getItems().add(ally);
+					MenuItem former = new MenuItem("Former un chevalier");
+					former.setOnAction(new EventHandler<ActionEvent>() {
+						 public void handle(ActionEvent e) {
+								ContextMenu contextMenu2 = new ContextMenu();
+								player.incChevalier();
+							e.consume();
+						}});
+					MenuItem former5 = new MenuItem("Former 5 chevaliers");
+					former5.setOnAction(new EventHandler<ActionEvent>() {
+						 public void handle(ActionEvent e) {
+								ContextMenu contextMenu2 = new ContextMenu();
+								player.incWaitingList(4);;
+							e.consume();
+						}});
+					MenuItem former10 = new MenuItem("Former 10 chevaliers");
+					former10.setOnAction(new EventHandler<ActionEvent>() {
+						 public void handle(ActionEvent e) {
+								ContextMenu contextMenu2 = new ContextMenu();
+								player.incWaitingList(9);;
+							e.consume();
+						}});
+					contextMenu.getItems().addAll(former,former5, former10);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
 					attack.setOnAction(evt -> player.attack(sprite, 0));
@@ -155,6 +233,28 @@ public class Main extends Application {
 			levelup.setOnAction(evt -> player.levelUp());
 			contextMenu.getItems().add(levelup);
 			contextMenu.getItems().addAll(duke, treasure, level,levelup);
+			MenuItem former = new MenuItem("Former un chevalier");
+			former.setOnAction(new EventHandler<ActionEvent>() {
+				 public void handle(ActionEvent e) {
+						ContextMenu contextMenu2 = new ContextMenu();
+						player.incChevalier();
+					e.consume();
+				}});
+			MenuItem former5 = new MenuItem("Former 5 chevaliers");
+			former5.setOnAction(new EventHandler<ActionEvent>() {
+				 public void handle(ActionEvent e) {
+						ContextMenu contextMenu2 = new ContextMenu();
+						player.incWaitingList(4);;
+					e.consume();
+				}});
+			MenuItem former10 = new MenuItem("Former 10 chevaliers");
+			former10.setOnAction(new EventHandler<ActionEvent>() {
+				 public void handle(ActionEvent e) {
+						ContextMenu contextMenu2 = new ContextMenu();
+						player.incWaitingList(9);;
+					e.consume();
+				}});
+			contextMenu.getItems().addAll(former,former5, former10);
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
@@ -177,6 +277,7 @@ public class Main extends Application {
 	//check if a castle can be add at this position
 	private boolean check_castle(List<Castle> lc, double x, double y) {
 		boolean in = true;
+		
 		// 250 au lieu de 150 pour avoir de l'espace entre chateau
 		double x1 = x + 150;
 		double y1 = y + 150;
@@ -184,6 +285,7 @@ public class Main extends Application {
 		double xmid = (x + x1) / 2;
 		double ymid = (y + y1) / 2;
 		for (int i = 0; i < lc.size(); i++) {
+			
 			// ici aussi les -100 et + 250 c'est pour avoir une marge
 			double xx = lc.get(i).getX() - 100;
 			double xx1 = xx + 250;
@@ -242,7 +344,7 @@ public class Main extends Application {
 		}
 
 	}*/
-
+	
 	
 	public static void main(String[] args) {
 		launch(args);
