@@ -98,18 +98,21 @@ public class Main extends Application {
                     pause = !pause;
                 }
 				if (!pause) {
-					spawnEnemies(spawn, xTarget, yTarget);
-					// movement
-					player.move();
-					enemies.forEach(sprite -> sprite.move());
 					
-	
+					// movement
+					
+					if(player.isAttacking())
+						player.getTroops().forEach(sprite -> sprite.move());
+					
+					
 					// update sprites in scene
 					player.updateUI();
-					enemies.forEach(sprite -> sprite.updateUI());
+					System.out.println(player.getTroops().size());
+					player.getTroops().forEach(sprite -> sprite.updateUI());
 					
-					enemies.forEach(sprite -> sprite.checkRemovability());
-					removeSprites(enemies);
+					player.checkRemovability();
+					removeSprites(player.getTroops());
+					
 				}
 				
 			}
@@ -176,7 +179,7 @@ public class Main extends Application {
 				String Level = "Level : ";
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
 				String chevaliers = "chevaliers : ";
-				chevaliers = chevaliers.concat(Integer.toString(player.getChevaliers()));
+				chevaliers = chevaliers.concat(Integer.toString(sprite.getChevaliers()));
 				MenuItem chevalier= new MenuItem(chevaliers);
 				MenuItem duke = new MenuItem(Duke);
 				MenuItem treasure= new MenuItem(Treasure);
@@ -237,7 +240,7 @@ public class Main extends Application {
 			MenuItem chevalier = new MenuItem(chevaliers);
 			MenuItem levelup = new MenuItem("Level Up");
 			levelup.setOnAction(evt -> player.levelUp());
-			contextMenu.getItems().add(levelup);
+			
 			contextMenu.getItems().addAll(duke, treasure, level,levelup,chevalier);
 			MenuItem former = new MenuItem("Former un chevalier");
 			former.setOnAction(new EventHandler<ActionEvent>() {
@@ -264,11 +267,14 @@ public class Main extends Application {
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
+	
+	
 	private void attack(double x, double y)
 	{
-		xTarget = x;
-		yTarget = y;
-		spawn = true;
+		player.getTroops().forEach(t -> t.setxTarget(x));
+		player.getTroops().forEach(t -> t.setyTarget(y));
+		player.getTroops().forEach(t -> t.addToLayer());
+		player.setAttacking(true);
 	}
 	
 	private void spawnEnemies(boolean random, double xt, double yt) {

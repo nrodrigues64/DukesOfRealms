@@ -34,13 +34,14 @@ public class Castle extends Sprite {
 	private Order order;
 	private int door;
 	private int chevaliers = 0;
-	
-
+	private boolean isAttacking = false;
+	private List<Troops> troops = new ArrayList<>();
 	private int waitinglist = 10; //le nombre d'unité en attente de formation
 	private boolean formation = false;
 	public Castle(Pane layer, Image image, double x, double y) {
 		super(layer,image, x, y,500);
 		init();
+		addToLayer();
 	}
 	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level) {
 		super(layer,image, x, y,500);
@@ -48,15 +49,32 @@ public class Castle extends Sprite {
 		this.treasur = treasur;
 		this.level = level;
 		init();
+		addToLayer();
 		
 	}
 	private void init() {
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20);
+		troops.add(t);
+		chevaliers = troops.size();
 		// calculate movement bounds of the player ship
 		// allow half of the player to be outside of the screen
 		minX = 0 + getWidth()*2;
 		maxX = Settings.SCENE_WIDTH - getWidth()*2;
 		minY = 0 + getHeight()*2;
 		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
+	}
+	
+	public List<Troops> getTroops() {
+		return troops;
+	}
+	public void setTroops(List<Troops> troops) {
+		this.troops = troops;
+	}
+	public boolean isAttacking() {
+		return isAttacking;
+	}
+	public void setAttacking(boolean isAttacking) {
+		this.isAttacking = isAttacking;
 	}
 	public void checkBounds() {
 		// vertical
@@ -67,6 +85,12 @@ public class Castle extends Sprite {
 		x = x < minX ? minX : x;
 		x = x > maxX ? maxX : x;
 	}
+	public void createTroop()
+	{
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20);
+        troops.add(t);
+	}
+	
 	public void incChevalier() {
 		waitinglist++;
 		Thread t = new Thread() {
@@ -79,7 +103,8 @@ public class Castle extends Sprite {
 						e.printStackTrace();
 					}
 		    	if (!Main.pause) {
-		        chevaliers++;
+		    	createTroop();
+		    	chevaliers++;
 		        waitinglist--;}
 		        }
 		      formation = false;
@@ -87,8 +112,10 @@ public class Castle extends Sprite {
 
 		    };
 		    if (!formation)
-		    	{formation = true;
-		    	t.start();}
+		    {
+		    	formation = true;
+		    	t.start();
+		    }
 		  }
 
 	public void incWaitingList(int nb) {
@@ -155,6 +182,18 @@ public class Castle extends Sprite {
 		this.door = door;
 	}
 	public void checkRemovability() {
+		
+		for(int i = 0; i < troops.size(); i++) {
+			troops.get(i).checkRemovability();
+			if(troops.get(i).isRemovable())
+			{
+				chevaliers-=1;
+			}
+		}
+		if(isAttacking() && chevaliers == 0)
+		{
+			setAttacking(false);
+		}
 	}
 	
 	public void attack(Castle c, int nbTroupe)

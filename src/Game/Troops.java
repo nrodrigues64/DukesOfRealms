@@ -31,6 +31,7 @@ public class Troops extends Sprite {
 		this.health = health;
 		this.damages = damages;
 		maxY = Settings.SCENE_HEIGHT - image.getHeight();
+		
 	}
 	public double getMaxY() {
 		return maxY;

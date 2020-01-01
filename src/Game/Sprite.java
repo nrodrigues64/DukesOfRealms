@@ -36,7 +36,7 @@ public abstract class Sprite {
         this.w = image.getWidth(); 
         this.h = image.getHeight(); 
 
-        addToLayer();
+        
 
     }
     
