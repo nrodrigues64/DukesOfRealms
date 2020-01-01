@@ -39,8 +39,16 @@ public abstract class Sprite {
         addToLayer();
 
     }
+    
+    public Pane getLayer() {
+		return layer;
+	}
 
-    public void addToLayer() {
+	public void setLayer(Pane layer) {
+		this.layer = layer;
+	}
+
+	public void addToLayer() {
         this.layer.getChildren().add(this.imageView);
     }
 

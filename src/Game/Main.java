@@ -55,9 +55,12 @@ public class Main extends Application {
 	private List<Troops> enemies = new ArrayList<>();
 	private List<Castle> lc = new ArrayList<>();
 	private Scene scene;
+	double xTarget;
+	double yTarget;
 	private AnimationTimer gameLoop;
 	private HashMap<String, Boolean> currentlyActiveKeys = new HashMap<>();
 	static boolean pause = false;
+	private boolean spawn = false;
 	Group root;
 
 	@Override
@@ -95,7 +98,7 @@ public class Main extends Application {
                     pause = !pause;
                 }
 				if (!pause) {
-					spawnEnemies(true);
+					spawnEnemies(spawn, xTarget, yTarget);
 					// movement
 					player.move();
 					enemies.forEach(sprite -> sprite.move());
@@ -191,32 +194,32 @@ public class Main extends Application {
 					former.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								ContextMenu contextMenu2 = new ContextMenu();
-								player.incChevalier();
+								sprite.incChevalier();
 							e.consume();
 						}});
 					MenuItem former5 = new MenuItem("Former 5 chevaliers");
 					former5.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								ContextMenu contextMenu2 = new ContextMenu();
-								player.incWaitingList(4);;
+								sprite.incWaitingList(4);;
 							e.consume();
 						}});
 					MenuItem former10 = new MenuItem("Former 10 chevaliers");
 					former10.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								ContextMenu contextMenu2 = new ContextMenu();
-								player.incWaitingList(9);;
+								sprite.incWaitingList(9);;
 							e.consume();
 						}});
 					contextMenu.getItems().addAll(former,former5, former10);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> player.attack(sprite, 0));
+					attack.setOnAction(evt -> this.attack(sprite.getX(),sprite.getY()));
 					contextMenu.getItems().add(attack);
 					
 				}
 				
-				contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
+				contextMenu.show(sprite.getView(), e.getScreenX(), e.getScreenY());
 		}));
 		player.getView().setOnContextMenuRequested(e -> {
 			ContextMenu contextMenu = new ContextMenu();
@@ -226,13 +229,16 @@ public class Main extends Application {
 			Treasure = Treasure.concat(Integer.toString(player.getTreasur()));
 			String Level = "Level : ";
 			Level = Level.concat(Integer.toString(player.getLevel()));
+			String chevaliers = "chevaliers : ";
+			chevaliers = chevaliers.concat(Integer.toString(player.getChevaliers()));
 			MenuItem duke = new MenuItem(Duke);
 			MenuItem treasure= new MenuItem(Treasure);
 			MenuItem level= new MenuItem(Level);
+			MenuItem chevalier = new MenuItem(chevaliers);
 			MenuItem levelup = new MenuItem("Level Up");
 			levelup.setOnAction(evt -> player.levelUp());
 			contextMenu.getItems().add(levelup);
-			contextMenu.getItems().addAll(duke, treasure, level,levelup);
+			contextMenu.getItems().addAll(duke, treasure, level,levelup,chevalier);
 			MenuItem former = new MenuItem("Former un chevalier");
 			former.setOnAction(new EventHandler<ActionEvent>() {
 				 public void handle(ActionEvent e) {
@@ -258,20 +264,33 @@ public class Main extends Application {
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
-
+	private void attack(double x, double y)
+	{
+		xTarget = x;
+		yTarget = y;
+		spawn = true;
+	}
 	
-	private void spawnEnemies(boolean random) {
-		if (random && rnd.nextInt(Settings.ENEMY_SPAWN_RANDOMNESS) != 0) {
+	private void spawnEnemies(boolean random, double xt, double yt) {
+		
+		if(!random) {
 			return;
+		} else {
+			for(int i = 0; i < player.getChevaliers(); i++) {
+				double speed = rnd.nextDouble() * 3 + 1.0;
+				double x =  player.x;
+				double y = player.y;
+				Troops enemy = new Troops(playfieldLayer, enemyImage, x, y, "Chevalier", 5, 2,speed, 50, 20);
+				enemy.setxTarget(xt);
+				enemy.setyTarget(yt);
+				enemies.add(enemy);
+				player.decChevalier();
+			}
+			if(player.getChevaliers()== 0)
+			{
+				spawn = false;
+			}
 		}
-		System.out.println("f");
-		double speed = rnd.nextDouble() * 3 + 1.0;
-		double x =  player.x;
-		double y = player.y;
-		Troops enemy = new Troops(playfieldLayer, enemyImage, x, y, "Chevalier", 5, 2,speed, 50, 20);
-		enemy.setxTarget(lc.get(0).getX());
-		enemy.setyTarget(lc.get(0).getY());
-		enemies.add(enemy);
 	}
 	
 	//check if a castle can be add at this position

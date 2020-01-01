@@ -20,6 +20,7 @@ public class Troops extends Sprite {
 	public void setyTarget(double yTarget) {
 		this.yTarget = yTarget;
 	}
+	
 	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
 			double speed, int health, int damages) {
 		super(layer, image, x, y,50);
