@@ -12,7 +12,7 @@ public abstract class Sprite {
     private int health;
     protected double x;
     protected double y;
-
+    private boolean moved = false;
     protected double dx;
     protected double dy;
 
@@ -47,7 +47,12 @@ public abstract class Sprite {
 	public void setLayer(Pane layer) {
 		this.layer = layer;
 	}
-
+	public boolean isMoved() {
+		return moved;
+	}
+	public void setMoved(boolean moved) {
+		this.moved = moved;
+	}
 	public void addToLayer() {
         this.layer.getChildren().add(this.imageView);
     }

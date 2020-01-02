@@ -14,11 +14,20 @@ public class Troops extends Sprite {
 	private double maxY;
 	private double xTarget;
 	private double yTarget;
+	private boolean attacking = false;
+	
 	public void setxTarget(double xTarget) {
 		this.xTarget = xTarget;
 	}
 	public void setyTarget(double yTarget) {
 		this.yTarget = yTarget;
+	}
+	
+	public boolean isAttacking() {
+		return attacking;
+	}
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
 	}
 	
 	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
@@ -86,30 +95,99 @@ public class Troops extends Sprite {
 	
 	public void move()
 	{
+		Thread t = new Thread() {
+		      public void run() {
+		    	  while(x > (xTarget + 1) || x < (xTarget - 1)) {
+		    		  try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    	if (!Main.pause) {
+		    		if(x < xTarget && x + speed < xTarget)
+					{
+						x += speed;
+						updateUI();
+					} else if(x < xTarget && x + speed > xTarget) {
+						x++;
+						updateUI();
+					}  else if(x > xTarget && x + speed > xTarget) {
+						x -= speed;
+						updateUI();
+					} else if(x < xTarget && x + speed > xTarget) {
+						x--;
+						updateUI();
+					}
+		        }
+		    	
+		      }
+		    	  while(y > (yTarget + 1) || y < (yTarget - 1)) {
+		    		  try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    	if (!Main.pause) {
+		    		if(y < yTarget && y + speed < yTarget)
+					{
+						y += speed;
+						updateUI();
+					} else if(y < yTarget && y + speed > yTarget) {
+						y++;
+						updateUI();
+					} else if(y > yTarget && y + speed > yTarget) {
+						y -= speed;
+						updateUI();
+					} else if(y < yTarget && y + speed > yTarget) {
+						y--;
+						updateUI();
+					}
+		        }
+		    	
+		      }
+		    	  attacking = false;
+		    	  setMoved(true);
+		   };
 		
-		if(x > (xTarget + 1) || x < (xTarget - 1)) {
+		/*while(x > (xTarget + 1) || x < (xTarget - 1)) {
 			if(x < this.xTarget && x + speed < this.xTarget)
 			{
 				x += speed;
+				updateUI();
 			} else if(x < this.xTarget && x + speed > this.xTarget) {
 				x++;
+				updateUI();
 			}  else if(x > this.xTarget && x + speed > this.xTarget) {
 				x -= speed;
+				updateUI();
 			} else if(x < this.xTarget && x + speed > this.xTarget) {
 				x--;
+				updateUI();
 			}
 		}
-		if(y > (yTarget + 1) || y < (yTarget - 1)) {
+		while(y > (yTarget + 1) || y < (yTarget - 1)) {
 			if(y < this.yTarget && y + speed < this.yTarget)
 			{
 				y += speed;
+				updateUI();
 			} else if(y < this.yTarget && y + speed > this.yTarget) {
 				y++;
+				updateUI();
 			} else if(y > this.yTarget && y + speed > this.yTarget) {
 				y -= speed;
+				updateUI();
 			} else if(y < this.yTarget && y + speed > this.yTarget) {
 				y--;
+				updateUI();
 			}
+		}*/
+		};
+		if(!attacking)
+		{
+			attacking = true;
+			t.start();
 		}
 	}
 }

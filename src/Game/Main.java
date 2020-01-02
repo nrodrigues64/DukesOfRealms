@@ -107,10 +107,10 @@ public class Main extends Application {
 					
 					// update sprites in scene
 					player.updateUI();
-					System.out.println(player.getTroops().size());
+					
 					player.getTroops().forEach(sprite -> sprite.updateUI());
 					
-					player.checkRemovability();
+					//player.checkRemovability();
 					removeSprites(player.getTroops());
 					
 				}
@@ -217,7 +217,7 @@ public class Main extends Application {
 					contextMenu.getItems().addAll(former,former5, former10);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> this.attack(sprite.getX(),sprite.getY()));
+					attack.setOnAction(evt -> player.attack(sprite, 1));
 					contextMenu.getItems().add(attack);
 					
 				}
@@ -273,7 +273,7 @@ public class Main extends Application {
 	{
 		player.getTroops().forEach(t -> t.setxTarget(x));
 		player.getTroops().forEach(t -> t.setyTarget(y));
-		player.getTroops().forEach(t -> t.addToLayer());
+		
 		player.setAttacking(true);
 	}
 	
@@ -337,7 +337,7 @@ public class Main extends Application {
 		while (iter.hasNext()) {
 			Sprite sprite = iter.next();
 
-			if (sprite.isRemovable()) {
+			if (sprite.isMoved()) {
 				// remove from layer
 				sprite.removeFromLayer();
 				// remove from list

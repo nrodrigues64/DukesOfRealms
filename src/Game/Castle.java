@@ -36,7 +36,7 @@ public class Castle extends Sprite {
 	private int chevaliers = 0;
 	private boolean isAttacking = false;
 	private List<Troops> troops = new ArrayList<>();
-	private int waitinglist = 10; //le nombre d'unité en attente de formation
+	private int waitinglist = 0; //le nombre d'unité en attente de formation
 	private boolean formation = false;
 	public Castle(Pane layer, Image image, double x, double y) {
 		super(layer,image, x, y,500);
@@ -184,21 +184,56 @@ public class Castle extends Sprite {
 	public void checkRemovability() {
 		
 		for(int i = 0; i < troops.size(); i++) {
+			
 			troops.get(i).checkRemovability();
-			if(troops.get(i).isRemovable())
-			{
-				chevaliers-=1;
-			}
+			
 		}
 		if(isAttacking() && chevaliers == 0)
 		{
 			setAttacking(false);
 		}
 	}
-	
+	public void removeTroop(Troops t)
+	{
+		t.removeFromLayer();
+		troops.remove(t);
+	}
 	public void attack(Castle c, int nbTroupe)
 	{
-		System.out.println(this.getDuke() + " attaque " + c.getDuke() + " avec " + nbTroupe);
+		if(nbTroupe > chevaliers) {
+			System.out.println("pas assez de troupe");
+			return;
+		}
+		for(int i = 0 ; i < nbTroupe ; i++)
+		{
+			troops.get(i).setxTarget(c.getX());
+			troops.get(i).setyTarget(c.getY());
+			troops.get(i).addToLayer();
+			troops.get(i).move();
+		}
+		int nbEnnemy = c.getChevaliers();
+		while(nbEnnemy > 0 && nbTroupe > 0) {
+				int h = c.getTroops().get(0).getHealth();
+				int n = troops.get(nbTroupe-1).getDamages();
+				c.getTroops().get(0).setHealth( c.getTroops().get(0).getHealth() - n);
+				if(c.getTroops().get(0).getHealth() <= 0) {
+					c.getTroops().remove(0);
+					c.setChevaliers(c.getChevaliers()-1);
+					nbEnnemy--;
+				}
+				if(h >= troops.get(nbTroupe-1).getDamages())
+				{
+					chevaliers--;
+					nbTroupe--;
+				} else {
+					troops.get(nbTroupe-1).setDamages(troops.get(nbTroupe-1).getDamages() - h);
+				}	
+		}
+		System.out.println(nbEnnemy);
+		if(nbEnnemy == 0) {
+			System.out.println("test");
+			c.setDuke(getDuke());
+		}
 	}
 	
 	public void levelUp()
