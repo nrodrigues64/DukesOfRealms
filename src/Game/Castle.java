@@ -1,13 +1,6 @@
 package Game;
 
 import java.util.ArrayList;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import java.time.Duration;
-import java.time.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 
 
@@ -35,6 +28,7 @@ public class Castle extends Sprite {
 	private int door;
 	private int chevaliers = 0;
 	private boolean isAttacking = false;
+	private boolean selected = false;
 	private List<Troops> troops = new ArrayList<>();
 	private int waitinglist = 0; //le nombre d'unité en attente de formation
 	private boolean formation = false;
@@ -64,6 +58,12 @@ public class Castle extends Sprite {
 		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
 	}
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 	public List<Troops> getTroops() {
 		return troops;
 	}

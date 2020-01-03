@@ -99,12 +99,6 @@ public class Main extends Application {
                 }
 				if (!pause) {
 					
-					// movement
-					
-					if(player.isAttacking())
-						player.getTroops().forEach(sprite -> sprite.move());
-					
-					
 					// update sprites in scene
 					player.updateUI();
 					
@@ -112,7 +106,13 @@ public class Main extends Application {
 					
 					//player.checkRemovability();
 					removeSprites(player.getTroops());
-					
+					lc.forEach(sprite -> 
+					{
+						if(sprite.getDuke() == player.getDuke())
+						{
+							removeSprites(sprite.getTroops());
+						}
+					});
 				}
 				
 			}
@@ -151,6 +151,7 @@ public class Main extends Application {
 		double y = random.nextInt((int)Settings.SCENE_HEIGHT);
 		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
 		player.checkBounds();
+		player.setSelected(true);
 		lc.add(0, player);
 		
 		int i = 0;
@@ -188,6 +189,7 @@ public class Main extends Application {
 				
 				if(sprite.getDuke() == player.getDuke())
 				{
+					
 					MenuItem levelup = new MenuItem("Level Up");
 					levelup.setOnAction(evt -> sprite.levelUp());
 					contextMenu.getItems().add(levelup);
@@ -214,10 +216,12 @@ public class Main extends Application {
 								sprite.incWaitingList(9);;
 							e.consume();
 						}});
-					contextMenu.getItems().addAll(former,former5, former10);
+					MenuItem select = new MenuItem("Select");
+					select.setOnAction(evt -> selected(sprite));
+					contextMenu.getItems().addAll(former,former5, former10,select);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> player.attack(sprite, 1));
+					attack.setOnAction(evt -> getSelected().attack(sprite, 1));
 					contextMenu.getItems().add(attack);
 					
 				}
@@ -234,11 +238,13 @@ public class Main extends Application {
 			Level = Level.concat(Integer.toString(player.getLevel()));
 			String chevaliers = "chevaliers : ";
 			chevaliers = chevaliers.concat(Integer.toString(player.getChevaliers()));
+			MenuItem select = new MenuItem("Select");
 			MenuItem duke = new MenuItem(Duke);
 			MenuItem treasure= new MenuItem(Treasure);
 			MenuItem level= new MenuItem(Level);
 			MenuItem chevalier = new MenuItem(chevaliers);
 			MenuItem levelup = new MenuItem("Level Up");
+			select.setOnAction(evt -> selected(player));
 			levelup.setOnAction(evt -> player.levelUp());
 			
 			contextMenu.getItems().addAll(duke, treasure, level,levelup,chevalier);
@@ -263,40 +269,9 @@ public class Main extends Application {
 						player.incWaitingList(9);;
 					e.consume();
 				}});
-			contextMenu.getItems().addAll(former,former5, former10);
+			contextMenu.getItems().addAll(former,former5, former10,select);
 			contextMenu.show(player.getView(), e.getScreenX(), e.getScreenY());
 		});
-	}
-	
-	
-	private void attack(double x, double y)
-	{
-		player.getTroops().forEach(t -> t.setxTarget(x));
-		player.getTroops().forEach(t -> t.setyTarget(y));
-		
-		player.setAttacking(true);
-	}
-	
-	private void spawnEnemies(boolean random, double xt, double yt) {
-		
-		if(!random) {
-			return;
-		} else {
-			for(int i = 0; i < player.getChevaliers(); i++) {
-				double speed = rnd.nextDouble() * 3 + 1.0;
-				double x =  player.x;
-				double y = player.y;
-				Troops enemy = new Troops(playfieldLayer, enemyImage, x, y, "Chevalier", 5, 2,speed, 50, 20);
-				enemy.setxTarget(xt);
-				enemy.setyTarget(yt);
-				enemies.add(enemy);
-				player.decChevalier();
-			}
-			if(player.getChevaliers()== 0)
-			{
-				spawn = false;
-			}
-		}
 	}
 	
 	//check if a castle can be add at this position
@@ -331,7 +306,31 @@ public class Main extends Application {
 
 		return true;
 	}
+	private void selected(Castle c)
+	{
+		if(c == player)
+		{
+			player.setSelected(true);
+			lc.forEach(sprite -> sprite.setSelected(false));
+		} else {
+			if(player.isSelected())
+				player.setSelected(false);
+			lc.forEach(sprite -> sprite.setSelected(false));
+			c.setSelected(true);
+		}
 		
+	}
+	private Castle getSelected()
+	{
+		
+		for(int i = 0; i < lc.size(); i++)
+		{
+			if(lc.get(i).getDuke() == player.getDuke())
+				if(lc.get(i).isSelected())
+					return lc.get(i);
+		}
+		return player;
+	}
 	private void removeSprites(List<? extends Sprite> spriteList) {
 		Iterator<? extends Sprite> iter = spriteList.iterator();
 		while (iter.hasNext()) {
