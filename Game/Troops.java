@@ -147,6 +147,12 @@ public class Troops extends Sprite {
 		        }
 		    	
 		      }
+		    	  try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		    	  attacking = false;
 		    	  setMoved(true);
 		   };

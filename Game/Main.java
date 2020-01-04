@@ -12,21 +12,25 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ButtonBase;
 import javafx.event.EventHandler;
+import javafx.*;
 
 import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.TextField;
+import java.awt.*;  
 
 import SampleGame.Settings;
 import javafx.animation.AnimationTimer;
@@ -152,15 +156,16 @@ public class Main extends Application {
 		double x = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
 		double y = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
 		player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
-		lc.add(0, player);
+		lc.add(player);
 		
 		int i = 0;
 		while(i < 5)
 		{
+			int j = i+1;
 			double x1 = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
 			double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
 			if(check_castle(lc,x1,y1)) {
-				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(1000000), 1);
+				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(1000000), 1,j);
 				lc.add(c);
 				i++;
 			}
@@ -180,11 +185,14 @@ public class Main extends Application {
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
 				String chevaliers = "chevaliers : ";
 				chevaliers = chevaliers.concat(Integer.toString(sprite.getChevaliers()));
+				String num = "num : ";
+				num = num.concat(Integer.toString(sprite.getNum()));
 				MenuItem chevalier= new MenuItem(chevaliers);
 				MenuItem duke = new MenuItem(Duke);
 				MenuItem treasure= new MenuItem(Treasure);
 				MenuItem level= new MenuItem(Level);
-				contextMenu.getItems().addAll(duke, treasure, level, chevalier);
+				MenuItem numero = new MenuItem(num);
+				contextMenu.getItems().addAll(duke, treasure, level, chevalier, numero);
 				
 				if(sprite.getDuke() == player.getDuke())
 				{
@@ -194,6 +202,7 @@ public class Main extends Application {
 					MenuItem ally = new MenuItem("Amie");
 					contextMenu.getItems().add(ally);
 					MenuItem former = new MenuItem("Former un chevalier");
+					
 					former.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								ContextMenu contextMenu2 = new ContextMenu();
@@ -216,9 +225,23 @@ public class Main extends Application {
 						}});
 					contextMenu.getItems().addAll(former,former5, former10);
 				} else {
-					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> player.attack(sprite, 1));
+					Menu  attack = new Menu("Attaquer");
+					
+					/*attack.setOnAction(evt -> player.attack(sprite, 1));*/
 					contextMenu.getItems().add(attack);
+					MenuItem chateau=new MenuItem(String.valueOf(player.getNum()));
+					 attack.getItems().add(chateau);
+					 attack.setOnAction(evt -> player.attack(sprite, 2));
+					for (int j = 0; j<5; j++) {
+						if (lc.get(j).getDuke() == 666 ) {
+							 MenuItem c=new MenuItem(String.valueOf(j));
+							 attack.getItems().add(c);
+							 int tcastle = j;
+							 attack.setOnAction(evt -> lc.get(tcastle).attack(sprite, 1));
+						}
+					}
+					
+			         
 					
 				}
 				
@@ -234,11 +257,13 @@ public class Main extends Application {
 			Level = Level.concat(Integer.toString(player.getLevel()));
 			String chevaliers = "chevaliers : ";
 			chevaliers = chevaliers.concat(Integer.toString(player.getChevaliers()));
+			
 			MenuItem duke = new MenuItem(Duke);
 			MenuItem treasure= new MenuItem(Treasure);
 			MenuItem level= new MenuItem(Level);
 			MenuItem chevalier = new MenuItem(chevaliers);
 			MenuItem levelup = new MenuItem("Level Up");
+			
 			levelup.setOnAction(evt -> player.levelUp());
 			
 			contextMenu.getItems().addAll(duke, treasure, level,levelup,chevalier);
@@ -366,7 +391,7 @@ public class Main extends Application {
 			}
 		}
 	}*/
-	
+
 	
 	public static void main(String[] args) {
 		launch(args);

@@ -25,6 +25,7 @@ public class Castle extends Sprite {
 	private double maxX;
 	private double minY;
 	private double maxY;
+	private int num ;
 	
 	private int duke;
 	private int treasur;
@@ -43,11 +44,22 @@ public class Castle extends Sprite {
 		init();
 		addToLayer();
 	}
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level, int num) {
+		super(layer,image, x, y,500);
+		this.duke = duke;
+		this.treasur = treasur;
+		this.level = level;
+		this.num = num;
+		init();
+		addToLayer();
+		
+	}
 	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level) {
 		super(layer,image, x, y,500);
 		this.duke = duke;
 		this.treasur = treasur;
 		this.level = level;
+		num = 0;
 		init();
 		addToLayer();
 		
@@ -161,6 +173,7 @@ public class Castle extends Sprite {
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	public int getNum() {return num;}
 	
 	
 	public ProductionUnit getProductionUnit() {
