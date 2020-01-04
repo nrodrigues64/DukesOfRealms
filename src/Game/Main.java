@@ -148,7 +148,7 @@ public class Main extends Application {
 				String Duke = "Owner : ";
 				Duke = Duke.concat(Integer.toString(sprite.getDuke()));
 				String Treasure = "Treasure : ";
-				Treasure = Treasure.concat(Integer.toString(sprite.getTreasur()));
+				Treasure = Treasure.concat(Integer.toString(sprite.getTreasure()));
 				String Level = "Level : ";
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
 				String chevaliers = "chevaliers : ";
@@ -193,7 +193,7 @@ public class Main extends Application {
 					contextMenu.getItems().addAll(former,former5, former10,select);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> getSelected().attack(sprite, 1));
+					attack.setOnAction(evt -> getSelected().attack(sprite, 3));
 					contextMenu.getItems().add(attack);
 					
 				}
@@ -205,7 +205,7 @@ public class Main extends Application {
 			String Duke = "Owner : ";
 			Duke = Duke.concat(Integer.toString(player.getDuke()));
 			String Treasure = "Treasure : ";
-			Treasure = Treasure.concat(Integer.toString(player.getTreasur()));
+			Treasure = Treasure.concat(Integer.toString(player.getTreasure()));
 			String Level = "Level : ";
 			Level = Level.concat(Integer.toString(player.getLevel()));
 			String chevaliers = "chevaliers : ";

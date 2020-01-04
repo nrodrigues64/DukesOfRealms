@@ -13,41 +13,126 @@ import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
+
+/**
+ * <b>Castle est une classe représentant un château.</b>
+ * <p>
+ * Un château est caractérisé par les informations suivantes :
+ * <ul>
+ * <li>Hérite des même attributs qu'un sprite</li>
+ * <li>Un duc qui est un ID pour identifier le château du joueur</li>
+ * <li>Un trésor</li>
+ * <li>Un niveau</li>
+ * </ul>
+ *
+ * @see Sprite
+ * @author Nicolas RODRIGUES et Tristan PREVOST
+ *
+ */
+
 public class Castle extends Sprite {
+	/**
+	 * Minimum range x
+	 */
 	private double minX;
+	/**
+	 * Maximum range x
+	 */
 	private double maxX;
+	/**
+	 * Minimum range y
+	 */
 	private double minY;
+	/**
+	 * Maximum range y
+	 */
 	private double maxY;
-	
+	/**
+	 * ID du duc
+	 */
 	private int duke;
-	private int treasur;
-	private int level;
-	
-	private ProductionUnit productionUnit;
-	private Order order;
-	private int door;
+	/**
+	 * Trésor du château
+	 */
+	private int treasure;
+	/**
+	 * Level du château
+	 */
+	private int level;	
+	/**
+	 * Nombre de troupes dans le château
+	 */
 	private int chevaliers = 0;
+	/**
+	 * Booléen qui indique si une attaque est en cours
+	 */
 	private boolean isAttacking = false;
+	/**
+	 * Booléen qui indique si le château est sélectionner pour l'attaque
+	 */
 	private boolean selected = false;
+	/**
+	 * Liste des troupes du château
+	 */
 	private List<Troops> troops = new ArrayList<>();
+	/**
+	 * Nombre d'unité en attente de formation
+	 */
 	private int waitinglist = 0; //le nombre d'unité en attente de formation
+	/**
+	 * Booléen qui indique si des troupe sont en formation
+	 */
 	private boolean formation = false;
+	
+	/**
+	 * Constructeur de Castle
+	 * @param layer
+	 * Plan
+	 * @param image
+	 * 	Image du château
+	 * @param x
+	 * 	Coordonnées x du château
+	 * @param y
+	 * 	Coordonnées y du château
+	 */
 	public Castle(Pane layer, Image image, double x, double y) {
-		super(layer,image, x, y,500);
+		super(layer,image, x, y);
 		init();
 		addToLayer();
 	}
-	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level) {
-		super(layer,image, x, y,500);
+	
+	/**
+	 * Constructeur du château
+	 * @param layer
+	 * Plan 
+	  * @param image
+	 * 	Image du château
+	 * @param x
+	 * 	Coordonnées x du château
+	 * @param y
+	 * 	Coordonnées y du château
+	 * @param duke
+	 * ID du duke
+	 * @param treasure
+	 * Trésor
+	 * @param level
+	 * Level
+	 */
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasure, int level) {
+		super(layer,image, x, y);
 		this.duke = duke;
-		this.treasur = treasur;
+		this.treasure = treasure;
 		this.level = level;
 		init();
 		addToLayer();
 		
 	}
+	
+	/**
+	 * Initialise minX, maxX, minY, maxY, met une torupe dans le château
+	 */
 	private void init() {
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20);
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), 1.6, 50, 20);
 		troops.add(t);
 		chevaliers = troops.size();
 		// calculate movement bounds of the player ship
@@ -58,24 +143,60 @@ public class Castle extends Sprite {
 		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
 	}
 	
+	/**
+	 * Récupérer selected
+	 * @return selected, true si le château est sélectionné false sinon
+	 */
 	public boolean isSelected() {
 		return selected;
 	}
+	
+	/**
+	 * Change la valeur de selected
+	 * @param selected
+	 * Booléen qui indique si le château est sélectionné
+	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
+	
+	/**
+	 * Récupérer troops
+	 * @return la liste de troupes
+	 */
 	public List<Troops> getTroops() {
 		return troops;
 	}
+	
+	/**
+	 * Changer de liste de troupes
+	 * @param troops
+	 * 	Liste des troupes du château
+	 */
 	public void setTroops(List<Troops> troops) {
 		this.troops = troops;
 	}
+	
+	/**
+	 * Récupérer isAttacking
+	 * @return isAttacking true si le château est en train d'attaquer false sinon
+	 */
 	public boolean isAttacking() {
 		return isAttacking;
 	}
+	
+	/**
+	 * Change la valeur de isAttacking 
+	 * @param isAttacking
+	 * 	Booléen qui indique si une attaque est en cours
+	 */
 	public void setAttacking(boolean isAttacking) {
 		this.isAttacking = isAttacking;
 	}
+	
+	/**
+	 * Teste les coordonnées du château pour pas qu'il soit hors champs
+	 */
 	public void checkBounds() {
 		// vertical
 		y = y < minY ? minY : y;
@@ -85,12 +206,19 @@ public class Castle extends Sprite {
 		x = x < minX ? minX : x;
 		x = x > maxX ? maxX : x;
 	}
+	
+	/**
+	 * Créer une troupe et l'ajoute à la liste
+	 */
 	public void createTroop()
 	{
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20);
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(),1.6, 50, 20);
         troops.add(t);
 	}
 	
+	/**
+	 * 
+	 */
 	public void incChevalier() {
 		waitinglist++;
 		Thread t = new Thread() {
@@ -117,87 +245,133 @@ public class Castle extends Sprite {
 		    	t.start();
 		    }
 		  }
-
+	
+	/**
+	 * Incrémenter la nombre de troupe en attente de formation
+	 * @param nb
+	 * 	Nombre à incrémenter à waitinglist
+	 */
 	public void incWaitingList(int nb) {
 		waitinglist+=nb;
 		incChevalier();
 	}
+	
+	/**
+	 * 
+	 */
 	public void decChevalier() {
 		chevaliers--;
 	}
+	
+	/**
+	 * Récupérer chevaliers
+	 * @return le nombre de chevaliers que contient le château
+	 */
 	public int getChevaliers() {
 		return chevaliers;
 	}
+	
+	/**
+	 * Changer la valeurs de chevaliers
+	 * @param chevaliers
+	 * Nombre de chevaliers dans le château
+	 */
 	public void setChevaliers(int chevaliers) {
 		this.chevaliers = chevaliers;
 	}
+	
+	/**
+	 * Récupérer waitinglist
+	 * @return le nombre de troupe en attente de formation
+	 */
 	public int getWaitinglist() {
 		return waitinglist;
 	}
+	
+	/**
+	 * Changer la valeur de waitinglist
+	 * @param waitinglist
+	 * 	Nombre de troupe en attente de formation
+	 */
 	public void setWaitinglist(int waitinglist) {
 		this.waitinglist = waitinglist;
 	}
+	
+	/**
+	 * Récupérer formation
+	 * @return formation, true si une formation est en cours false sinon
+	 */
 	public boolean isFormation() {
 		return formation;
 	}
+	
+	/**
+	 *Changer la valeur de formation 
+	 * @param formation
+	 * 	Booléen qui indique si une formation est en cours
+	 */
 	public void setFormation(boolean formation) {
 		this.formation = formation;
 	}
+	
+	/**
+	 * Récupérer duke
+	 * @return l'ID du duc
+	 */
 	public int getDuke() {
 		return duke;
 	}
+	
+	/**
+	 * Changer l'ID du duc
+	 * @param duke
+	 * 	ID du duc
+	 */
 	public void setDuke(int duke) {
 		this.duke = duke;
 	}
-	public int getTreasur() {
-		return treasur;
+	
+	/**
+	 * Récupérer treasure
+	 * @return la valeur du trésor du chateau
+	 */
+	public int getTreasure() {
+		return treasure;
 	}
-	public void setTreasur(int treasur) {
-		this.treasur = treasur;
+	
+	/**
+	 * Changer la valeur du trésor
+	 * @param treasure
+	 * 	Trésor du château
+	 */
+	public void setTreasure(int treasure) {
+		this.treasure = treasure;
 	}
+	
+	/**
+	 * Récupérer level
+	 * @return le niveau actuel du château
+	 */
 	public int getLevel() {
 		return level;
 	}
+	
+	/**
+	 * Changer le level du château
+	 * @param level
+	 * 	Niveau du château
+	 */
 	public void setLevel(int level) {
 		this.level = level;
 	}
 	
-	
-	public ProductionUnit getProductionUnit() {
-		return productionUnit;
-	}
-	public void setProductionUnit(ProductionUnit productionUnit) {
-		this.productionUnit = productionUnit;
-	}
-	public Order getOrder() {
-		return order;
-	}
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	public int getDoor() {
-		return door;
-	}
-	public void setDoor(int door) {
-		this.door = door;
-	}
-	public void checkRemovability() {
-		
-		for(int i = 0; i < troops.size(); i++) {
-			
-			troops.get(i).checkRemovability();
-			
-		}
-		if(isAttacking() && chevaliers == 0)
-		{
-			setAttacking(false);
-		}
-	}
-	public void removeTroop(Troops t)
-	{
-		t.removeFromLayer();
-		troops.remove(t);
-	}
+	/**
+	 * Attaquer le château c avec nbTroupe
+	 * @param c
+	 * 	Château à attaquer
+	 * @param nbTroupe
+	 * 	Nombre de troupes utilisées pour l'attaque
+	 */
 	public void attack(Castle c, int nbTroupe)
 	{
 		if(nbTroupe > chevaliers) {
@@ -236,16 +410,19 @@ public class Castle extends Sprite {
 		}
 	}
 	
+	/**
+	 * Augmenter le château d'un niveau
+	 */
 	public void levelUp()
 	{
-		if(this.getTreasur() < 1000*(this.getLevel()+1))
+		if(this.getTreasure() < 1000*(this.getLevel()+1))
 		{
 			System.out.println("Trésor insuffisant.");
 		} else {
 			int tmp = 100+50*(this.getLevel()+1);
 			System.out.println("L'amélioration prendra " + tmp + "tours.");
 			this.setLevel(this.getLevel()+1);
-			this.setTreasur(this.getTreasur()-1000*(this.getLevel()+1));
+			this.setTreasure(this.getTreasure()-1000*(this.getLevel()+1));
 		}
 	}
 }
