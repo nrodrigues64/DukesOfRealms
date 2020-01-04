@@ -56,7 +56,10 @@ public abstract class Sprite {
 	public void addToLayer() {
         this.layer.getChildren().add(this.imageView);
     }
-
+	public void addToLayer(Pane layer)
+	{
+		
+	}
     public void removeFromLayer() {
         this.layer.getChildren().remove(this.imageView);
     }
