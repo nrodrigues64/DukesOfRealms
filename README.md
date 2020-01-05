@@ -1,11 +1,11 @@
-# Description du jeu
+# Dukes of realms
+## Description du jeu
+### Test
 
 Dans ce mini jeu vidéo, l'objectif est de conquérir les châteaux ennemis. Les modes d'interactions sont les suivants :
 
-- Touches de directions (gauche, droit, haut, bas)
-- Touche espace pour tirer des annanas
-- Clic gauche de la souris pour positionner le vaisseau à un endroit spécifique
-- Clic droit de la souris pour faire apparaitre un menu contextuel (changement de vitesse des tirs)
+- Clic droit de la souris sur un château pour faire apparaitre un menu contextuel
+- Clavier lors de la demande de saisie d'information (pseudo, nombre de troupe)
 
 Chaque ennemi détruit rapporte des points (en fonction de la position du vaisseau). Le joueur possède initialement 3 vies et perd une vie à chaque fois qu'un ennemi le touche. 
 
