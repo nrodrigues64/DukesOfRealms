@@ -1,6 +1,5 @@
 # Dukes of realms
 ## Description du jeu
-### Test
 
 Dans ce mini jeu vidéo, l'objectif est de conquérir les châteaux ennemis. Les modes d'interactions sont les suivants :
 
@@ -16,13 +15,31 @@ Les joueurs disposent de châteaux générant des richesses avec lesquels ils po
 ![screenshot](DoRdescriptionJeu.png)
 
 
-# À faire 
+## Mode d'emploi
+### Lancement
 
-Pour mieux comprendre le fonctionnement du jeu, nous vous demandons d'apporter les modifications suivantes.
+Au lancement vous devez saisir un entier qui déterminera votre nom durant le jeu qui fait office de pseudo.
+![pseudo](DoRpseudo.png)
 
 
-## Super ennemi
+### Régles du jeu
 
+Un fois votre pseudo saisie le jeu commence. Vous pourrez apercevoir plusieur château identique qui sont des château de barons dont vous pouvais vous emparer pour gagner. Pour ce faire il vous faudra des troupes (vous disposez d'une troupe au commencement), pour former ces troupes il vous faut avoir assez de trésorie (ici le florin qui est la monnaie du jeu).
+
+Votre château a vous est le château différent des autres qui se distingue facilement par sa couleur :
+![chateauDuc](DoRchateauDuc.png)
+
+Vous pouvez intéragir avec le jeu en faisant un clique droit de la souris sur les châteaux, lors de ce clique un menu contextuel s'ouvrira en fonction de si le château est allié ou ennemi.
+
+Si le chateau est allié vous aurez les options suivant : 
+![menuChateauDuc](DoRMenuChateauDuc.png)
+
+- Owner
+Permet de savoir à qui appartient le château
+- Treasure
+Permet de savoir quelle est la trésorie actuelle du château
+- Level
+Permet de savoir quel est le niveau du château, celui-ci influence vos gains par secondes (au niveau  vous gagnez 50 florins/s, ensuite (50 + 30 * level)/s)
 Faites en sorte que chaque ennemi ait un nombre de vies allant de 1 pour le plus petit à 5 pour le plus gros. Modifiez le programme pour titrer aléatoirement un type d'ennemi et ajuster à la fois sa taille et son nombbre de vies. Il faut regarder la classe `Enemy.java` ainsi que la méthode `spawnEnemies` de la classe `Main.java`.
 
 ## Pause active
