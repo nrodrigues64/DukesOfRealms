@@ -107,6 +107,7 @@ public class Castle extends Sprite {
         troops.add(t);
 	}
 	
+	
 	public void incChevalier() {
 		waitinglist++;
 		Thread t = new Thread() {
@@ -121,7 +122,8 @@ public class Castle extends Sprite {
 		    	if (!Main.pause) {
 		    	createTroop();
 		    	chevaliers++;
-		        waitinglist--;}
+		        waitinglist--;
+		        }
 		        }
 		      formation = false;
 		      }
@@ -135,8 +137,14 @@ public class Castle extends Sprite {
 		  }
 
 	public void incWaitingList(int nb) {
-		waitinglist+=nb;
-		incChevalier();
+		//vérification de la possibilité financière de créer des troupes
+		if(treasur >= 125*(nb+1)) {
+			waitinglist+=nb;
+			incChevalier();
+			treasur -= 125*(nb+1);
+		}else {
+			System.out.println("Les réserves du trésor sont trop faibles pour créer autant de chevaliers");
+		}
 	}
 	public void decChevalier() {
 		chevaliers--;
@@ -295,14 +303,21 @@ public class Castle extends Sprite {
 	
 	public void levelUp()
 	{
-		if(this.getTreasur() < 1000*(this.getLevel()+1))
+		if(this.getTreasur() < 1000*(this.getLevel()))
 		{
 			System.out.println("Trésor insuffisant.");
 		} else {
-			int tmp = 100+50*(this.getLevel()+1);
-			System.out.println("L'amélioration prendra " + tmp + "tours.");
+			System.out.println("Amélioration du chateau");
+			this.setTreasur(this.getTreasur()-1000*(this.getLevel()));
 			this.setLevel(this.getLevel()+1);
-			this.setTreasur(this.getTreasur()-1000*(this.getLevel()+1));
+			
 		}
 	}
+	
+	public void incMoney() {
+		treasur += 50 +(int)((level-1)*30) ;
+	}
+	
+	
+	
 }

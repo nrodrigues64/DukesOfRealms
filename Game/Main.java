@@ -130,7 +130,7 @@ public class Main extends Application {
 		//le random est fait dans les limites de la taille de l'écran
 				double x = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
 				double y = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
-				player = new Castle(playfieldLayer, castleImage, x, y,666, 99999, 1);
+				player = new Castle(playfieldLayer, castleImage, x, y,666, 500, 1);
 				lc.add(player);
 				
 				int i = 0;
@@ -140,13 +140,14 @@ public class Main extends Application {
 					double x1 = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
 					double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
 					if(check_castle(lc,x1,y1)) {
-						Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(1000000), 1,j);
+						Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), 500, 1,j);
 						lc.add(c);
 						i++;
 					}
 					
 				}
 		player = lc.remove(0);
+		moneyDelay();
 		
 		k = new Kingdom(player,lc);
 		
@@ -344,7 +345,27 @@ public class Main extends Application {
 			}
 		}
 	}*/
-	
+	public void moneyDelay() {
+		Thread t = new Thread() {
+		      public void run() {
+		    	  while(true) {
+		    		  try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    	if (!Main.pause) {
+		    		k.getHome().incMoney();
+		    		for(int i = 0; i< k.getCastles().size(); i++) {
+		    			k.getCastles().get(i).incMoney();
+		    		}
+		        }
+		    }}};
+
+		  t.start();
+
+	}
 	
 	public static void main(String[] args) {
 		launch(args);

@@ -164,38 +164,7 @@ public class Troops extends Sprite {
 		    	  setMoved(true);
 		   };
 		
-		/*while(x > (xTarget + 1) || x < (xTarget - 1)) {
-			if(x < this.xTarget && x + speed < this.xTarget)
-			{
-				x += speed;
-				updateUI();
-			} else if(x < this.xTarget && x + speed > this.xTarget) {
-				x++;
-				updateUI();
-			}  else if(x > this.xTarget && x + speed > this.xTarget) {
-				x -= speed;
-				updateUI();
-			} else if(x < this.xTarget && x + speed > this.xTarget) {
-				x--;
-				updateUI();
-			}
-		}
-		while(y > (yTarget + 1) || y < (yTarget - 1)) {
-			if(y < this.yTarget && y + speed < this.yTarget)
-			{
-				y += speed;
-				updateUI();
-			} else if(y < this.yTarget && y + speed > this.yTarget) {
-				y++;
-				updateUI();
-			} else if(y > this.yTarget && y + speed > this.yTarget) {
-				y -= speed;
-				updateUI();
-			} else if(y < this.yTarget && y + speed > this.yTarget) {
-				y--;
-				updateUI();
-			}
-		}*/
+
 		};
 		if(!attacking)
 		{
