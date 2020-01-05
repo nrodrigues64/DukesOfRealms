@@ -1,6 +1,6 @@
 # Description du jeu
 
-Dans ce mini jeu vidéo, l'objectif est de tuer un maximum d'ennemis. Les modes d'interactions sont les suivants :
+Dans ce mini jeu vidéo, l'objectif est de conquérir les châteaux ennemis. Les modes d'interactions sont les suivants :
 
 - Touches de directions (gauche, droit, haut, bas)
 - Touche espace pour tirer des annanas
