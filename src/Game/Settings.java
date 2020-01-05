@@ -1,17 +1,19 @@
 package Game;
 
 import java.awt.Toolkit;
+import java.awt.geom.Dimension2D;
 /**
- * <b>Settings est une classe qui sert à paramétrer certain aspect du jeu tel que :</b>
+ * <b>Settings est une classe qui sert à paramétrer certain aspect du jeu.</b>
+ * <p>
+ * Ces aspects sont :
  * <ul>
  * <li>La largeur du plateau</li>
  * <li>La hauteur du plateau</li>
  * </ul>
- *
- * @author Nicolas RODRIGUES & Tristan PREVOST
+ * 
+ * @author Nicolas RODRIGUES et Tristan PREVOST
  *
  */
-import java.awt.geom.Dimension2D;
 public class Settings {
 	/**
 	 * Créer un objet Dimension2D qui permet de récupérer la taille de l'écran

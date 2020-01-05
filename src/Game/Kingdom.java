@@ -62,47 +62,18 @@ public class Kingdom {
 	}
 	
 	/**
-	 * Changer la valeur de home
-	 * @param home
-	 * 	Château du joueur
-	 */
-	public void setHome(Castle home) {
-		this.home = home;
-	}
-	
-	/**
 	 * Récupérer castles
 	 * @return la liste des châteaux ennemis
 	 */
 	public List<Castle> getCastles() {
 		return castles;
 	}
-	
-	/**
-	 * Changer la valeur de castles
-	 * @param castles
-	 * 	Liste des châteaux ennemis
-	 */
-	public void setCastles(List<Castle> castles) {
-		this.castles = castles;
-	}
-	
+		
 	/**
 	 * Récupérer freeZone
 	 * @return la liste des châteaux libres
 	 */
 	public List<Castle> getFreeZone() {
 		return freeZone;
-	}
-	
-	/**
-	 * Changer la valeurs de freeZone
-	 * @param freeZone
-	 * 	Liste des châteaux libres
-	 */
-	public void setFreeZone(List<Castle> freeZone) {
-		this.freeZone = freeZone;
-	}
-	
-	
+	}	
 }

@@ -31,26 +31,15 @@ import javafx.scene.layout.Pane;
  */
 
 public class Castle extends Sprite {
-	/**
-	 * Minimum range x
-	 */
-	private double minX;
-	/**
-	 * Maximum range x
-	 */
-	private double maxX;
-	/**
-	 * Minimum range y
-	 */
-	private double minY;
-	/**
-	 * Maximum range y
-	 */
-	private double maxY;
+
 	/**
 	 * ID du duc
 	 */
 	private int duke;
+	/**
+	 * 
+	 */
+	private Order ordreCourant;
 	/**
 	 * Trésor du château
 	 */
@@ -59,14 +48,6 @@ public class Castle extends Sprite {
 	 * Level du château
 	 */
 	private int level;	
-	/**
-	 * Nombre de troupes dans le château
-	 */
-	private int chevaliers = 0;
-	/**
-	 * Booléen qui indique si une attaque est en cours
-	 */
-	private boolean isAttacking = false;
 	/**
 	 * Booléen qui indique si le château est sélectionner pour l'attaque
 	 */
@@ -121,191 +102,8 @@ public class Castle extends Sprite {
 	private void init() {
 		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), 1.6, 50, 20,duke);
 		troops.add(t);
-		chevaliers = troops.size();
-		// calculate movement bounds of the player ship
-		// allow half of the player to be outside of the screen
-		minX = 0 + getWidth()*2;
-		maxX = Settings.SCENE_WIDTH - getWidth()*2;
-		minY = 0 + getHeight()*2;
-		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
 	}
 	
-	/**
-	 * Récupérer selected
-	 * @return selected, true si le château est sélectionné false sinon
-	 */
-	public boolean isSelected() {
-		return selected;
-	}
-	
-	/**
-	 * Change la valeur de selected
-	 * @param selected
-	 * Booléen qui indique si le château est sélectionné
-	 */
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-	
-	/**
-	 * Récupérer troops
-	 * @return la liste de troupes
-	 */
-	public List<Troops> getTroops() {
-		return troops;
-	}
-	/**
-	 * Récupérer ATroops
-	 * @return la liste des troupes attaquantes
-	 */
-	public List<Troops> getATroops() {
-		return Atroops;
-	}
-	/**
-	 * Changer de liste de troupes
-	 * @param troops
-	 * 	Liste des troupes du château
-	 */
-	public void setTroops(List<Troops> troops) {
-		this.troops = troops;
-	}
-	
-	/**
-	 * Récupérer isAttacking
-	 * @return isAttacking true si le château est en train d'attaquer false sinon
-	 */
-	public boolean isAttacking() {
-		return isAttacking;
-	}
-	
-	/**
-	 * Change la valeur de isAttacking 
-	 * @param isAttacking
-	 * 	Booléen qui indique si une attaque est en cours
-	 */
-	public void setAttacking(boolean isAttacking) {
-		this.isAttacking = isAttacking;
-	}
-	
-	/**
-	 * Teste les coordonnées du château pour pas qu'il soit hors champs
-	 */
-	public void checkBounds() {
-		// vertical
-		y = y < minY ? minY : y;
-		y = y > maxY ? maxY : y;
-
-		// horizontal
-		x = x < minX ? minX : x;
-		x = x > maxX ? maxX : x;
-	}
-	
-	/**
-	 * Créer une troupe et l'ajoute à la liste
-	 */
-	public void createTroop()
-	{
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(),1.6, 50, 20,duke);
-        troops.add(t);
-	}
-	
-	/**
-	 * 
-	 */
-	public void incChevalier() {
-		waitinglist++;
-		Thread t = new Thread() {
-		      public void run() {
-		    	  while(waitinglist>0) {
-		    		  try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		    	if (!Main.pause) {
-		    	createTroop();
-		    	chevaliers++;
-		        waitinglist--;}
-		        }
-		      formation = false;
-		      }
-
-		    };
-		    if (!formation)
-		    {
-		    	formation = true;
-		    	t.start();
-		    }
-		  }
-	
-	/**
-	 * Incrémenter la nombre de troupe en attente de formation
-	 * @param nb
-	 * 	Nombre à incrémenter à waitinglist
-	 */
-	public void incWaitingList(int nb) {
-		waitinglist+=nb;
-		incChevalier();
-	}
-	
-	/**
-	 * 
-	 */
-	public void decChevalier() {
-		chevaliers--;
-	}
-	
-	/**
-	 * Récupérer chevaliers
-	 * @return le nombre de chevaliers que contient le château
-	 */
-	public int getChevaliers() {
-		return chevaliers;
-	}
-	
-	/**
-	 * Changer la valeurs de chevaliers
-	 * @param chevaliers
-	 * Nombre de chevaliers dans le château
-	 */
-	public void setChevaliers(int chevaliers) {
-		this.chevaliers = chevaliers;
-	}
-	
-	/**
-	 * Récupérer waitinglist
-	 * @return le nombre de troupe en attente de formation
-	 */
-	public int getWaitinglist() {
-		return waitinglist;
-	}
-	
-	/**
-	 * Changer la valeur de waitinglist
-	 * @param waitinglist
-	 * 	Nombre de troupe en attente de formation
-	 */
-	public void setWaitinglist(int waitinglist) {
-		this.waitinglist = waitinglist;
-	}
-	
-	/**
-	 * Récupérer formation
-	 * @return formation, true si une formation est en cours false sinon
-	 */
-	public boolean isFormation() {
-		return formation;
-	}
-	
-	/**
-	 *Changer la valeur de formation 
-	 * @param formation
-	 * 	Booléen qui indique si une formation est en cours
-	 */
-	public void setFormation(boolean formation) {
-		this.formation = formation;
-	}
 	
 	/**
 	 * Récupérer duke
@@ -333,15 +131,6 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Changer la valeur du trésor
-	 * @param treasure
-	 * 	Trésor du château
-	 */
-	public void setTreasure(int treasure) {
-		this.treasure = treasure;
-	}
-	
-	/**
 	 * Récupérer level
 	 * @return le niveau actuel du château
 	 */
@@ -350,12 +139,98 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Changer le level du château
-	 * @param level
-	 * 	Niveau du château
+	 * Récupérer selected
+	 * @return selected, true si le château est sélectionné false sinon
 	 */
-	public void setLevel(int level) {
-		this.level = level;
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	/**
+	 * Change la valeur de selected
+	 * @param selected
+	 * Booléen qui indique si le château est sélectionné
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	
+	/**
+	 * Récupérer troops
+	 * @return la liste de troupes
+	 */
+	public List<Troops> getTroops() {
+		return troops;
+	}
+	
+	/**
+	 * Récupérer ATroops
+	 * @return la liste des troupes attaquantes
+	 */
+	public List<Troops> getATroops() {
+		return Atroops;
+	}	
+
+	/**
+	 * Créer une troupe et l'ajoute à la liste
+	 */
+	public void createTroop()
+	{
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(),1.6, 50, 20,duke);
+        troops.add(t);
+	}
+	
+	/**
+	 * Créer une troupe et l'ajouter au château
+	 */
+	public void incChevalier() {
+		Thread t = new Thread() {
+		      public void run() {
+		    	  while(waitinglist>0) {
+		    		  try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						//
+						e.printStackTrace();
+					}
+		    	if (!Main.pause) {
+		    	createTroop();
+		        waitinglist--;}
+		        }
+		      formation = false;
+		      }
+
+		    };
+		    if (!formation)
+		    {
+		    	formation = true;
+		    	t.start();
+		    }
+		  }
+	
+	/**
+	 * Incrémenter la nombre de troupe en attente de formation
+	 * @param nb
+	 * 	Nombre à incrémenter à waitinglist
+	 */
+	public void incWaitingList(int nb) {
+		waitinglist+=nb;
+		//vérification de la possibilité financière de créer des troupes
+		if(treasure >= 125*(nb+1)) {
+			waitinglist+=nb;
+			incChevalier();
+			treasure -= 125*(nb+1);
+		}else {
+			System.out.println("Les réserves du trésor sont trop faibles pour créer autant de chevaliers");
+		}
+	}
+	
+	/**
+	 * Récupérer chevaliers
+	 * @return le nombre de chevaliers que contient le château
+	 */
+	public int getChevaliers() {
+		return troops.size();
 	}
 	
 	/**
@@ -365,73 +240,29 @@ public class Castle extends Sprite {
 	 * @param nbTroupe
 	 * 	Nombre de troupes utilisées pour l'attaque
 	 */
-	public void attack(Castle c, int nbTroupe)
-	{
-		if(nbTroupe > chevaliers) {
-			System.out.println("pas assez de troupe");
-			return;
-		}
-		for(int i = 0 ; i < nbTroupe ; i++)
-		{
-			troops.get(i).setxTarget(c.getX());
-			troops.get(i).setyTarget(c.getY());
-			troops.get(i).addToLayer();
-			troops.get(i).move();
-		}
-		int nbEnnemy = c.getChevaliers();
-		while(nbEnnemy > 0 && nbTroupe > 0) {
-				int h = c.getTroops().get(0).getHealth();
-				int n = troops.get(nbTroupe-1).getDamages();
-				c.getTroops().get(0).setHealth( c.getTroops().get(0).getHealth() - n);
-				if(c.getTroops().get(0).getHealth() <= 0) {
-					c.getTroops().remove(0);
-					c.setChevaliers(c.getChevaliers()-1);
-					nbEnnemy--;
-				}
-				if(h >= troops.get(nbTroupe-1).getDamages())
-				{
-					chevaliers--;
-					nbTroupe--;
-				} else {
-					troops.get(nbTroupe-1).setDamages(troops.get(nbTroupe-1).getDamages() - h);
-				}	
-		}
-		System.out.println(nbEnnemy);
-		if(nbEnnemy == 0) {
-			System.out.println("test");
-			c.setDuke(getDuke());
-		}
-	}
-	
-	/**
-	 * 
-	 * @param c
-	 * @param nbTroupe
-	 */
 	public void attack2(Castle c, int nbTroupe)
 	{
-		if(nbTroupe > chevaliers) {
+		ordreCourant = new Order(c, nbTroupe);
+		if(ordreCourant.getNbTroops() > getChevaliers()) {
 			System.out.println("pas assez de troupe");
 			return;
 		}
 		else {
-		for(int i = 0 ; i < nbTroupe ; i++)
+		for(int i = 0 ; i < ordreCourant.getNbTroops() ; i++)
 		{
 			System.out.println("A l'assaut");
 			int size = Atroops.size();
 			Atroops.add(troops.get(0));
 			troops.remove(0);
-			Atroops.get(size).setxTarget(c.getX()+25);
-			Atroops.get(size).setyTarget(c.getY()+65);
-			Atroops.get(size).setCible(c);
+			Atroops.get(size).setCible(ordreCourant.getTarget());
 			Atroops.get(size).addToLayer();
-			chevaliers --;
+			
 		}}
 
 	}
 	
 	/**
-	 * 
+	 * Met à jours la liste des troupes attaquante
 	 */
 	public void UpdateTroops() {
 		for (int i = 0; i<Atroops.size(); i++) 
@@ -444,7 +275,7 @@ public class Castle extends Sprite {
 			try {
 				Atroops.get(i).move2();
 				} catch (IndexOutOfBoundsException e) {
-				// TODO Auto-generated catch block
+				//
 
 				e.printStackTrace();
 			}
@@ -456,14 +287,19 @@ public class Castle extends Sprite {
 	 */
 	public void levelUp()
 	{
-		if(this.getTreasure() < 1000*(this.getLevel()+1))
+		if(this.getTreasure() < 1000*(this.level+1))
 		{
 			System.out.println("Trésor insuffisant.");
 		} else {
-			int tmp = 100+50*(this.getLevel()+1);
-			System.out.println("L'amélioration prendra " + tmp + "tours.");
-			this.setLevel(this.getLevel()+1);
-			this.setTreasure(this.getTreasure()-1000*(this.getLevel()+1));
+			System.out.println("Amélioration du chateau");
+			this.treasure = (this.getTreasure()-1000*(this.getLevel()+1));
 		}
+	}
+	
+	/**
+	 *Augmenter la trésorie de 50 + 30/level en plus 
+	 */
+	public void incMoney() {
+		treasure += 50 +(int)((level-1)*30) ;
 	}
 }
