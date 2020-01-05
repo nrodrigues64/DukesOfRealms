@@ -21,6 +21,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Group;
@@ -57,6 +59,9 @@ public class Main extends Application {
 	private Button choixPseudo = new Button();
 	private TextField textFieldPseudo = new TextField();
 	private boolean pseudo = false;
+	GridPane gridPaneForm = new GridPane();
+	GridPane gridPanePseudo = new GridPane();
+	GridPane gridPaneAttack = new GridPane();
 	Group root;
 
 	@Override
@@ -405,22 +410,22 @@ public class Main extends Application {
 	public void initStageAttack()
 	{
 		//Configuration de la grille du la fenêtre
-        GridPane gridPane = new GridPane();
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
-        gridPane.setPadding(new Insets(10));
+        
+        gridPaneAttack.setVgap(10);
+        gridPaneAttack.setHgap(10);
+        gridPaneAttack.setPadding(new Insets(10));
         
         //Création des items présents dans la fenêtre
 		Label label = new Label("Saisissez un nombre de troupe pour l'attaque");
 		addNbTroupeAttack.setText("OK");	
 		
 		//Ajout des items à la grille
-		gridPane.add(label, 0, 0);
-        gridPane.add(textFieldAttack, 0, 1);
-        gridPane.add(addNbTroupeAttack, 0, 2, 2, 1);
+		gridPaneAttack.add(label, 0, 0);
+        gridPaneAttack.add(textFieldAttack, 0, 1);
+        gridPaneAttack.add(addNbTroupeAttack, 0, 3, 2, 1);
         GridPane.setHalignment(addNbTroupeAttack, HPos.CENTER);       
         dialogAttack.initStyle(StageStyle.UTILITY);
-        Scene scene = new Scene(gridPane);
+        Scene scene = new Scene(gridPaneAttack);
         dialogAttack.setScene(scene);
 	}
 	
@@ -433,7 +438,23 @@ public class Main extends Application {
 	 */
 	public void initButtonOkAttack(Castle c,Castle c1)
 	{
-		addNbTroupeAttack.setOnAction(evt -> saisieTroupe(c, c1));
+		addNbTroupeAttack.setOnAction(new EventHandler<ActionEvent>() {
+			 public void handle(ActionEvent e) {
+					try 
+			        { 
+			            // checking valid integer using parseInt() method 
+			            Integer.parseInt(textFieldAttack.getText());		   
+						saisieTroupe(c,c1);
+						dialogForm.close(); 
+			        }catch (NumberFormatException e1){ 
+			        	Label label = new Label("Saisissez un entier");
+			        	gridPaneForm.add(label, 0, 2);
+			        	
+				    } 
+					
+					
+				e.consume();
+			}});
 		dialogAttack.show();	
 	}
 	
@@ -457,20 +478,20 @@ public class Main extends Application {
 	public void initStageForm()
 	{
 		//Configuration de la grille de la fenêtre
-        GridPane gridPane = new GridPane();
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
-        gridPane.setPadding(new Insets(10));
+        
+        gridPaneForm.setVgap(10);
+        gridPaneForm.setHgap(15);
+        gridPaneForm.setPadding(new Insets(10));
         
         //Ajout des items à la grille
 		Label label = new Label("Saisissez un nombre de troupe à former");
 		addNbTroupeForm.setText("OK");	
-		gridPane.add(label, 0, 0);
-        gridPane.add(textFieldForm, 0, 1);
-        gridPane.add(addNbTroupeForm, 0, 2, 2, 1);
+		gridPaneForm.add(label, 0, 0);
+        gridPaneForm.add(textFieldForm, 0, 1);
+        gridPaneForm.add(addNbTroupeForm, 0, 3, 2, 1);
         GridPane.setHalignment(addNbTroupeForm, HPos.CENTER);       
         dialogForm.initStyle(StageStyle.UTILITY);
-        Scene scene = new Scene(gridPane);
+        Scene scene = new Scene(gridPaneForm);
         dialogForm.setScene(scene);
 	}
 	
@@ -481,7 +502,25 @@ public class Main extends Application {
 	 */
 	public void initButtonOkForm(Castle c)
 	{
-		addNbTroupeForm.setOnAction(evt -> saisieTroupeForm(c));
+		addNbTroupeForm.setOnAction( 
+				new EventHandler<ActionEvent>() {
+			 public void handle(ActionEvent e) {
+					try 
+			        { 
+			            // checking valid integer using parseInt() method 
+			            Integer.parseInt(textFieldForm.getText());		   
+						saisieTroupeForm(c);
+						dialogForm.close(); 
+			        }catch (NumberFormatException e1){ 
+			        	Label label = new Label("Saisissez un entier");
+			        	gridPaneForm.add(label, 0, 2);
+			        	
+				    } 
+					
+					
+				e.consume();
+			}}
+				);
 		dialogForm.show();	
 	}
 	
@@ -503,20 +542,28 @@ public class Main extends Application {
 	public void initStagePseudo()
 	{
 		//Configuration de la grille de la fenêtre
-        GridPane gridPane = new GridPane();
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
-        gridPane.setPadding(new Insets(10));
+        
+        gridPanePseudo.setVgap(10);
+        gridPanePseudo.setHgap(10);
+        gridPanePseudo.setPadding(new Insets(10));
         
         //Ajout des items à la grille
-		Label label = new Label("Choisissez un Pseudo :");
+		Label label = new Label("Choisissez un Pseudo(un entier):");
 		choixPseudo.setText("OK");	
-		gridPane.add(label, 0, 0);
-        gridPane.add(textFieldPseudo, 0, 1);
-        gridPane.add(choixPseudo, 0, 2, 2, 1);
+		gridPanePseudo.add(label, 0, 0);
+		textFieldPseudo.textProperty().removeListener(new ChangeListener<String>() {
+		    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		        String newValue) {
+		        if (!newValue.matches("\\d*")) {
+		            textFieldPseudo.setText(newValue.replaceAll("[^\\d]", ""));
+		        }
+		    }
+		});
+        gridPanePseudo.add(textFieldPseudo, 0, 1);
+        gridPanePseudo.add(choixPseudo, 0, 3, 2, 1);
         GridPane.setHalignment(choixPseudo, HPos.CENTER);       
         dialogPseudo.initStyle(StageStyle.UTILITY);
-        Scene scene = new Scene(gridPane);
+        Scene scene = new Scene(gridPanePseudo);
         dialogPseudo.setScene(scene);
         initButtonOkPseudo();
 	}
@@ -528,13 +575,27 @@ public class Main extends Application {
 	 */
 	public void initButtonOkPseudo()
 	{
-		choixPseudo.setOnAction(evt -> {
-			createPlayer();
-			initStageAttack();
-			initStageForm();
-			pseudo = true;
-			dialogPseudo.close();
-		});
+		choixPseudo.setOnAction(
+				new EventHandler<ActionEvent>() {
+					 public void handle(ActionEvent e) {
+							try 
+					        { 
+					            // checking valid integer using parseInt() method 
+					            Integer.parseInt(textFieldPseudo.getText());
+					            createPlayer();
+								initStageAttack();
+								initStageForm();
+					            pseudo = true;
+								dialogPseudo.close(); 
+					        }catch (NumberFormatException e1){ 
+					        		
+						            Label l = new Label("Saisissez un entier");
+						            gridPanePseudo.add(l, 0, 2);
+						    } 
+							
+							
+						e.consume();
+					}});
 		dialogPseudo.show();	
 	}
 	/*private void checkCollisions() {
