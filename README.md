@@ -13,7 +13,7 @@ Les joueurs disposent de châteaux générant des richesses avec lesquels ils po
 
  
 
-![screenshot](screenshot.png)
+![screenshot](DoRdescriptionJeu.png)
 
 
 # À faire 
