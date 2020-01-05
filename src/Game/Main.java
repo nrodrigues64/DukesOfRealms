@@ -30,8 +30,9 @@ import javafx.scene.Scene;
 
 public class Main extends Application {
 	private Pane playfieldLayer;
-	Stage dialog = new Stage();
-	TextField textField = new TextField();
+	Stage dialogAttack = new Stage();
+	Stage dialogForm = new Stage();
+	
 	private Image castleImage;
 	private Image castleEnemy;
 	private Kingdom k;
@@ -44,8 +45,10 @@ public class Main extends Application {
 	private AnimationTimer gameLoop;
 	private HashMap<String, Boolean> currentlyActiveKeys = new HashMap<>();
 	static boolean pause = false;
-	private Button addNbTroupe = new Button();
-	
+	private Button addNbTroupeAttack = new Button();
+	private TextField textFieldAttack = new TextField();
+	private Button addNbTroupeForm = new Button();
+	private TextField textFieldForm = new TextField();
 	Group root;
 
 	@Override
@@ -132,7 +135,8 @@ public class Main extends Application {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		castleEnemy = new Image(getClass().getResource("/images/white_castle.jpg").toExternalForm(), 100,100,true,true);
 		createPlayer();
-		initPop();
+		initStageAttack();
+		initStageForm();
 	}
 
 
@@ -164,55 +168,47 @@ public class Main extends Application {
 		
 		k.getCastles().forEach(sprite -> sprite.getView().setOnContextMenuRequested(e -> {
 				ContextMenu contextMenu = new ContextMenu();
+				//
 				String Duke = "Owner : ";
 				Duke = Duke.concat(Integer.toString(sprite.getDuke()));
+				//
 				String Treasure = "Treasure : ";
 				Treasure = Treasure.concat(Integer.toString(sprite.getTreasure()));
+				//
 				String Level = "Level : ";
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
+				//
 				String chevaliers = "chevaliers : ";
 				chevaliers = chevaliers.concat(Integer.toString(sprite.getChevaliers()));
+				//
 				MenuItem chevalier= new MenuItem(chevaliers);
 				MenuItem duke = new MenuItem(Duke);
 				MenuItem treasure= new MenuItem(Treasure);
 				MenuItem level= new MenuItem(Level);
+				//
 				contextMenu.getItems().addAll(duke, treasure, level, chevalier);
 				
 				if(sprite.getDuke() == k.getHome().getDuke())
 				{
-					
+					//
 					MenuItem levelup = new MenuItem("Level Up");
 					levelup.setOnAction(evt -> sprite.levelUp());
-					contextMenu.getItems().add(levelup);
-					MenuItem ally = new MenuItem("Amie");
-					contextMenu.getItems().add(ally);
+					
 					MenuItem former = new MenuItem("Former un chevalier");
 					former.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								
-								sprite.incChevalier();
+								initButtonOkForm(sprite);
 							e.consume();
 						}});
-					MenuItem former5 = new MenuItem("Former 5 chevaliers");
-					former5.setOnAction(new EventHandler<ActionEvent>() {
-						 public void handle(ActionEvent e) {
-								
-								sprite.incWaitingList(4);;
-							e.consume();
-						}});
-					MenuItem former10 = new MenuItem("Former 10 chevaliers");
-					former10.setOnAction(new EventHandler<ActionEvent>() {
-						 public void handle(ActionEvent e) {
-								
-								sprite.incWaitingList(9);;
-							e.consume();
-						}});
+					
+					
 					MenuItem select = new MenuItem("Select");
 					select.setOnAction(evt -> selected(sprite));
-					contextMenu.getItems().addAll(former,former5, former10,select);
+					contextMenu.getItems().addAll(levelup, former, select);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> initPopUp(getSelected(),sprite));
+					attack.setOnAction(evt -> initButtonOkAttack(getSelected(),sprite));
 					contextMenu.getItems().add(attack);
 					
 				}
@@ -242,25 +238,11 @@ public class Main extends Application {
 			MenuItem former = new MenuItem("Former un chevalier");
 			former.setOnAction(new EventHandler<ActionEvent>() {
 				 public void handle(ActionEvent e) {
+						initButtonOkForm(k.getHome());
 						
-						k.getHome().incChevalier();
 					e.consume();
 				}});
-			MenuItem former5 = new MenuItem("Former 5 chevaliers");
-			former5.setOnAction(new EventHandler<ActionEvent>() {
-				 public void handle(ActionEvent e) {
-						
-						k.getHome().incWaitingList(4);;
-					e.consume();
-				}});
-			MenuItem former10 = new MenuItem("Former 10 chevaliers");
-			former10.setOnAction(new EventHandler<ActionEvent>() {
-				 public void handle(ActionEvent e) {
-						
-						k.getHome().incWaitingList(9);;
-					e.consume();
-				}});
-			contextMenu.getItems().addAll(former,former5, former10,select);
+			contextMenu.getItems().addAll(former, select);
 			contextMenu.show(k.getHome().getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
@@ -335,40 +317,68 @@ public class Main extends Application {
 			}
 		}
 	}
-	public void initPop()
+	public void initStageAttack()
 	{
-	        GridPane gridPane = new GridPane();
-	        gridPane.setVgap(10);
-	        gridPane.setHgap(10);
-	        gridPane.setPadding(new Insets(10));
-
-	        
-	        
-		Label label = new Label("Saisissez un nombre de troupe");
-		addNbTroupe.setText("OK");
-		
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+        gridPane.setPadding(new Insets(10));
+ 
+		Label label = new Label("Saisissez un nombre de troupe pour l'attaque");
+		addNbTroupeAttack.setText("OK");	
 		gridPane.add(label, 0, 0);
-        gridPane.add(textField, 0, 1);
-        gridPane.add(addNbTroupe, 0, 2, 2, 1);
-        GridPane.setHalignment(addNbTroupe, HPos.CENTER);
-        
-        dialog.initStyle(StageStyle.UTILITY);
+        gridPane.add(textFieldAttack, 0, 1);
+        gridPane.add(addNbTroupeAttack, 0, 2, 2, 1);
+        GridPane.setHalignment(addNbTroupeAttack, HPos.CENTER);       
+        dialogAttack.initStyle(StageStyle.UTILITY);
         Scene scene = new Scene(gridPane);
-        dialog.setScene(scene);
-        
-
+        dialogAttack.setScene(scene);
 	}
-	public void initPopUp(Castle duke,Castle ennemy)
+	
+	public void initButtonOkAttack(Castle duke,Castle ennemy)
 	{
-		addNbTroupe.setOnAction(evt -> saisieTroupe(duke, ennemy));
-		dialog.show();	
+		addNbTroupeAttack.setOnAction(evt -> saisieTroupe(duke, ennemy));
+		dialogAttack.show();	
 	}
+	
 	public void saisieTroupe(Castle c, Castle c1)
 	{	
-		nbT = Integer.parseInt(textField.getText());
-		dialog.close();
+		nbT = Integer.parseInt(textFieldAttack.getText());
+		dialogAttack.close();
 		c.attack2(c1,nbT);
 	}
+	
+	public void initStageForm()
+	{
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+        gridPane.setPadding(new Insets(10));
+ 
+		Label label = new Label("Saisissez un nombre de troupe à former");
+		addNbTroupeForm.setText("OK");	
+		gridPane.add(label, 0, 0);
+        gridPane.add(textFieldForm, 0, 1);
+        gridPane.add(addNbTroupeForm, 0, 2, 2, 1);
+        GridPane.setHalignment(addNbTroupeForm, HPos.CENTER);       
+        dialogForm.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPane);
+        dialogForm.setScene(scene);
+	}
+	
+	public void initButtonOkForm(Castle c)
+	{
+		addNbTroupeForm.setOnAction(evt -> saisieTroupeForm(c));
+		dialogForm.show();	
+	}
+	
+	public void saisieTroupeForm(Castle c)
+	{	
+		nbT = Integer.parseInt(textFieldForm.getText());
+		dialogForm.close();
+		c.incWaitingList(nbT-1);
+	}
+	
 	/*private void checkCollisions() {
 		collision = false;
 
