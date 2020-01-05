@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 public class Troops extends Sprite {
+	private int owner;
 	private String name;
 	private int productionCost;
 	private int productionTime;
@@ -14,8 +15,13 @@ public class Troops extends Sprite {
 	private double maxY;
 	private double xTarget;
 	private double yTarget;
-	private boolean attacking = false;
+	private boolean attacking = true;
+	private Castle cible;
 	
+	
+	public void setCible(Castle c) {
+		this.cible = c;
+	}
 	public void setxTarget(double xTarget) {
 		this.xTarget = xTarget;
 	}
@@ -31,7 +37,7 @@ public class Troops extends Sprite {
 	}
 	
 	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
-			double speed, int health, int damages) {
+			double speed, int health, int damages, int owner) {
 		super(layer, image, x, y,50);
 		this.name = name;
 		this.productionCost = productionCost;
@@ -39,6 +45,7 @@ public class Troops extends Sprite {
 		this.speed = speed;
 		this.health = health;
 		this.damages = damages;
+		this.owner = owner;
 		maxY = Settings.SCENE_HEIGHT - image.getHeight();
 		
 	}
@@ -194,6 +201,73 @@ public class Troops extends Sprite {
 		{
 			attacking = true;
 			t.start();
+		}
+	}
+	
+	public void move2()
+	{
+		if(!isMoved()){
+			
+			    	  if(x > (xTarget + 1) || x < (xTarget - 1)) {
+			    		
+			    	if (!Main.pause) {
+			    		if(x < xTarget && x + speed < xTarget)
+						{
+							x += speed;
+							updateUI();
+						} else if(x < xTarget && x + speed > xTarget) {
+							x++;
+							updateUI();
+						}  else if(x > xTarget && x + speed > xTarget) {
+							x -= speed;
+							updateUI();
+						} else if(x < xTarget && x + speed > xTarget) {
+							x--;
+							updateUI();
+							
+						}
+			        }
+			    	
+			      }
+			    	  else if(y > (yTarget + 1) || y < (yTarget - 1)) {
+			    		
+			    	if (!Main.pause) {
+			    		if(y < yTarget && y + speed < yTarget)
+						{
+							y += speed;
+							updateUI();
+						} else if(y < yTarget && y + speed > yTarget) {
+							y++;
+							updateUI();
+						} else if(y > yTarget && y + speed > yTarget) {
+							y -= speed;
+							updateUI();
+						} else if(y < yTarget && y + speed > yTarget) {
+							y--;
+							updateUI();
+						}
+			        }
+			    	
+			      }
+			    	
+			    	  else {
+			    	System.out.println("test");
+			    	attacking = false;
+			    }
+			    	  
+			   
+			
+		}
+		
+	}
+	
+	public void makeDamages() {
+		int enemy = cible.getChevaliers();
+		if (enemy == 0) {
+			cible.setDuke(this.owner);
+		}
+		else {
+			cible.decChevalier();
 		}
 	}
 }

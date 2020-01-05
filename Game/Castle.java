@@ -1,13 +1,6 @@
 package Game;
 
 import java.util.ArrayList;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import java.time.Duration;
-import java.time.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 
 
@@ -25,34 +18,26 @@ public class Castle extends Sprite {
 	private double maxX;
 	private double minY;
 	private double maxY;
-	private int num ;
 	
 	private int duke;
 	private int treasur;
 	private int level;
+	private int num;
 	
 	private ProductionUnit productionUnit;
 	private Order order;
 	private int door;
-	private int chevaliers = 0;
+	private int chevaliers;
 	private boolean isAttacking = false;
+	private boolean selected = false;
 	private List<Troops> troops = new ArrayList<>();
+	private List<Troops> Atroops = new ArrayList<>();
 	private int waitinglist = 0; //le nombre d'unité en attente de formation
 	private boolean formation = false;
 	public Castle(Pane layer, Image image, double x, double y) {
 		super(layer,image, x, y,500);
 		init();
 		addToLayer();
-	}
-	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level, int num) {
-		super(layer,image, x, y,500);
-		this.duke = duke;
-		this.treasur = treasur;
-		this.level = level;
-		this.num = num;
-		init();
-		addToLayer();
-		
 	}
 	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level) {
 		super(layer,image, x, y,500);
@@ -64,8 +49,18 @@ public class Castle extends Sprite {
 		addToLayer();
 		
 	}
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasur, int level, int num ) {
+		super(layer,image, x, y,500);
+		this.duke = duke;
+		this.treasur = treasur;
+		this.level = level;
+		this.num = num;
+		init();
+		addToLayer();
+	}
+	
 	private void init() {
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20);
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20, duke);
 		troops.add(t);
 		chevaliers = troops.size();
 		// calculate movement bounds of the player ship
@@ -76,8 +71,17 @@ public class Castle extends Sprite {
 		maxY = Settings.SCENE_HEIGHT - getHeight()*2;
 	}
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 	public List<Troops> getTroops() {
 		return troops;
+	}
+	public List<Troops> getATroops() {
+		return Atroops;
 	}
 	public void setTroops(List<Troops> troops) {
 		this.troops = troops;
@@ -99,7 +103,7 @@ public class Castle extends Sprite {
 	}
 	public void createTroop()
 	{
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20);
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), "Chevalier", 5, 2,1.6, 50, 20, duke);
         troops.add(t);
 	}
 	
@@ -173,7 +177,6 @@ public class Castle extends Sprite {
 	public void setLevel(int level) {
 		this.level = level;
 	}
-	public int getNum() {return num;}
 	
 	
 	public ProductionUnit getProductionUnit() {
@@ -219,10 +222,11 @@ public class Castle extends Sprite {
 		}
 		for(int i = 0 ; i < nbTroupe ; i++)
 		{
-			troops.get(i).setxTarget(c.getX());
-			troops.get(i).setyTarget(c.getY());
+			troops.get(i).setxTarget(c.getX()+200);
+			troops.get(i).setyTarget(c.getY()+75);
 			troops.get(i).addToLayer();
 			troops.get(i).move();
+			System.out.println("NTM");
 		}
 		int nbEnnemy = c.getChevaliers();
 		while(nbEnnemy > 0 && nbTroupe > 0) {
@@ -246,6 +250,46 @@ public class Castle extends Sprite {
 		if(nbEnnemy == 0) {
 			System.out.println("test");
 			c.setDuke(getDuke());
+		}
+	}
+	
+	public void attack2(Castle c, int nbTroupe)
+	{
+		if(nbTroupe > chevaliers) {
+			System.out.println("pas assez de troupe");
+			return;
+		}
+		else {
+		for(int i = 0 ; i < nbTroupe ; i++)
+		{
+			System.out.println("A l'assaut");
+			int size = Atroops.size();
+			Atroops.add(troops.get(0));
+			troops.remove(0);
+			Atroops.get(size).setxTarget(c.getX()+25);
+			Atroops.get(size).setyTarget(c.getY()+65);
+			Atroops.get(size).setCible(c);
+			Atroops.get(size).addToLayer();
+			chevaliers --;
+		}}
+		
+	}
+	
+	public void UpdateTroops() {
+		for (int i = 0; i<Atroops.size(); i++) 
+		{
+			//les toupes n'attaquent plus = elles sont arrivées a destination, il faut les supprimer et infliger les degats
+			if(!Atroops.get(i).isAttacking()) {
+				Atroops.get(i).makeDamages();
+				Atroops.get(i).setMoved(true);
+			}
+			try {
+				Atroops.get(i).move2();
+				} catch (IndexOutOfBoundsException e) {
+				// TODO Auto-generated catch block
+					
+				e.printStackTrace();
+			}
 		}
 	}
 	
