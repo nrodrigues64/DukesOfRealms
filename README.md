@@ -36,12 +36,10 @@ Si le chateau est allié vous aurez les options suivant :
 
 ![menuChateauDuc](DoRMenuChateauDuc.png)
 
-- Owner
- - Permet de savoir à qui appartient le château
-- Treasure
- - Permet de savoir quelle est la trésorie actuelle du château
-- Level
- - Permet de savoir quel est le niveau du château, celui-ci influence vos gains par secondes (au niveau  vous gagnez 50 florins/s, ensuite (50 + 30 * level)/s)
+- Owner: Permet de savoir à qui appartient le château
+- Treasure: Permet de savoir quelle est la trésorie actuelle du château
+- Level: Permet de savoir quel est le niveau du château, celui-ci influence vos gains par secondes (au niveau  vous gagnez 50 florins/s, ensuite (50 + 30 * level)/s)
+- Level up: Permet d'augmenter le niveau du château
 Faites en sorte que chaque ennemi ait un nombre de vies allant de 1 pour le plus petit à 5 pour le plus gros. Modifiez le programme pour titrer aléatoirement un type d'ennemi et ajuster à la fois sa taille et son nombbre de vies. Il faut regarder la classe `Enemy.java` ainsi que la méthode `spawnEnemies` de la classe `Main.java`.
 
 ## Pause active
