@@ -37,6 +37,7 @@ public class Main extends Application {
 	private Pane playfieldLayer;
 	private Stage dialogAttack = new Stage();
 	private Stage dialogForm = new Stage();
+	private Stage dialogPseudo = new Stage();
 	private Image castleImage;
 	private Image castleEnemy;
 	private Kingdom k;
@@ -53,6 +54,9 @@ public class Main extends Application {
 	private TextField textFieldAttack = new TextField();
 	private Button addNbTroupeForm = new Button();
 	private TextField textFieldForm = new TextField();
+	private Button choixPseudo = new Button();
+	private TextField textFieldPseudo = new TextField();
+	private boolean pseudo = false;
 	Group root;
 
 	@Override
@@ -83,34 +87,35 @@ public class Main extends Application {
 			@Override
 			public void handle(long now) {
 				
-
+				if(pseudo) {
 				
-				if (removeActiveKey("P")) {
-                    System.out.println("game paused");
-                    pause = !pause;
-                }
-				if (!pause) {
-					
-					k.getHome().UpdateTroops();
-					for (int i = 0; i< k.getCastles().size(); i++)
-					{
-						k.getCastles().get(i).UpdateTroops();
-					}
-					// update sprites in scene
-					k.getHome().updateUI();
-					
-					k.getHome().getTroops().forEach(sprite -> sprite.updateUI());
-					
-					//player.checkRemovability();
-					removeSprites(k.getHome().getTroops());
-					removeSprites(k.getHome().getATroops());
-					k.getCastles().forEach(sprite -> 
-					{
-						if(sprite.getDuke() == k.getHome().getDuke())
+					if (removeActiveKey("P")) {
+		                System.out.println("game paused");
+		                pause = !pause;
+		            }
+					if (!pause) {
+						
+						k.getHome().UpdateTroops();
+						for (int i = 0; i< k.getCastles().size(); i++)
 						{
-							removeSprites(sprite.getATroops());
+							k.getCastles().get(i).UpdateTroops();
 						}
-					});
+						// update sprites in scene
+						k.getHome().updateUI();
+						
+						k.getHome().getTroops().forEach(sprite -> sprite.updateUI());
+						
+						//player.checkRemovability();
+						removeSprites(k.getHome().getTroops());
+						removeSprites(k.getHome().getATroops());
+						k.getCastles().forEach(sprite -> 
+						{
+							if(sprite.getDuke() == k.getHome().getDuke())
+							{
+								removeSprites(sprite.getATroops());
+							}
+						});
+					}
 				}
 				
 			}
@@ -138,9 +143,9 @@ public class Main extends Application {
 	private void loadGame() {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		castleEnemy = new Image(getClass().getResource("/images/white_castle.jpg").toExternalForm(), 100,100,true,true);
-		createPlayer();
-		initStageAttack();
-		initStageForm();
+		
+		initStagePseudo();
+		
 	}
 
 	/**
@@ -153,7 +158,7 @@ public class Main extends Application {
 		double y = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
 		
 		//Création du château du duc
-		player = new Castle(playfieldLayer, castleImage, x, y,666, 500, 1);
+		player = new Castle(playfieldLayer, castleImage, x, y,Integer.parseInt(textFieldPseudo.getText()), 500, 1);
 		//Le château est sélectionner par défaut pour l'attaque
 		player.setSelected(true);
 		//Ajout à la liste pour vérification ultérieur
@@ -492,6 +497,46 @@ public class Main extends Application {
 		c.incWaitingList(nbT-1);
 	}
 	
+	/**
+	 * Initialiser le PopUp (Fenêtre) pour saisie des troupes à former
+	 */
+	public void initStagePseudo()
+	{
+		//Configuration de la grille de la fenêtre
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+        gridPane.setPadding(new Insets(10));
+        
+        //Ajout des items à la grille
+		Label label = new Label("Choisissez un Pseudo :");
+		choixPseudo.setText("OK");	
+		gridPane.add(label, 0, 0);
+        gridPane.add(textFieldPseudo, 0, 1);
+        gridPane.add(choixPseudo, 0, 2, 2, 1);
+        GridPane.setHalignment(choixPseudo, HPos.CENTER);       
+        dialogPseudo.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPane);
+        dialogPseudo.setScene(scene);
+        initButtonOkPseudo();
+	}
+	
+	/**
+	 * Configurer le bouton OK du PopUp et afficher le PopUp
+	 * @param c
+	 * 	Château attaquant
+	 */
+	public void initButtonOkPseudo()
+	{
+		choixPseudo.setOnAction(evt -> {
+			createPlayer();
+			initStageAttack();
+			initStageForm();
+			pseudo = true;
+			dialogPseudo.close();
+		});
+		dialogPseudo.show();	
+	}
 	/*private void checkCollisions() {
 		collision = false;
 
