@@ -7,7 +7,11 @@ Dans ce mini jeu vidéo, l'objectif est de conquérir les châteaux ennemis. Les
 - Clic droit de la souris sur un château pour faire apparaitre un menu contextuel
 - Clavier lors de la demande de saisie d'information (pseudo, nombre de troupe)
 
-Chaque ennemi détruit rapporte des points (en fonction de la position du vaisseau). Le joueur possède initialement 3 vies et perd une vie à chaque fois qu'un ennemi le touche. 
+Le jeu se déroule dans un royaume lointain, à la stabilité discutable, dans lequel le trône a été laissé vacant suite à diverses intrigues qu’il ne nous appartient pas de décrire ici. Chaque joueur incarne un duc, en lutte pour devenir le nouveau roi. Pour cela, ils doivent vassaliser les autres en conquérant leur terres.
+
+Les joueurs disposent de châteaux générant des richesses avec lesquels ils pourront lever des osts (troupes) pour attaquer les châteaux adverses. Le jeu se termine dès qu’un seul duc possède encore au moins un château.
+
+ 
 
 ![screenshot](screenshot.png)
 
