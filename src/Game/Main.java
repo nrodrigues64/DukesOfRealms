@@ -6,22 +6,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.HashMap;
+
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler; 
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+ 
 
 
 public class Main extends Application {
 	private Pane playfieldLayer;
-	
+	Stage dialog = new Stage();
+	TextField textField = new TextField();
 	private Image castleImage;
 	private Image castleEnemy;
 	private Kingdom k;
@@ -29,10 +39,12 @@ public class Main extends Application {
 	private List<Castle> lc = new ArrayList<>();
 	private Scene scene;
 	double xTarget;
+	private int nbT;
 	double yTarget;
 	private AnimationTimer gameLoop;
 	private HashMap<String, Boolean> currentlyActiveKeys = new HashMap<>();
 	static boolean pause = false;
+	private Button addNbTroupe = new Button();
 	
 	Group root;
 
@@ -72,6 +84,11 @@ public class Main extends Application {
                 }
 				if (!pause) {
 					
+					k.getHome().UpdateTroops();
+					for (int i = 0; i< k.getCastles().size(); i++)
+					{
+						k.getCastles().get(i).UpdateTroops();
+					}
 					// update sprites in scene
 					k.getHome().updateUI();
 					
@@ -79,11 +96,12 @@ public class Main extends Application {
 					
 					//player.checkRemovability();
 					removeSprites(k.getHome().getTroops());
+					removeSprites(k.getHome().getATroops());
 					k.getCastles().forEach(sprite -> 
 					{
 						if(sprite.getDuke() == k.getHome().getDuke())
 						{
-							removeSprites(sprite.getTroops());
+							removeSprites(sprite.getATroops());
 						}
 					});
 				}
@@ -114,6 +132,7 @@ public class Main extends Application {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		castleEnemy = new Image(getClass().getResource("/images/white_castle.jpg").toExternalForm(), 100,100,true,true);
 		createPlayer();
+		initPop();
 	}
 
 
@@ -193,7 +212,7 @@ public class Main extends Application {
 					contextMenu.getItems().addAll(former,former5, former10,select);
 				} else {
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> getSelected().attack(sprite, 3));
+					attack.setOnAction(evt -> initPopUp(getSelected(),sprite));
 					contextMenu.getItems().add(attack);
 					
 				}
@@ -316,7 +335,40 @@ public class Main extends Application {
 			}
 		}
 	}
+	public void initPop()
+	{
+	        GridPane gridPane = new GridPane();
+	        gridPane.setVgap(10);
+	        gridPane.setHgap(10);
+	        gridPane.setPadding(new Insets(10));
 
+	        
+	        
+		Label label = new Label("Saisissez un nombre de troupe");
+		addNbTroupe.setText("OK");
+		
+		gridPane.add(label, 0, 0);
+        gridPane.add(textField, 0, 1);
+        gridPane.add(addNbTroupe, 0, 2, 2, 1);
+        GridPane.setHalignment(addNbTroupe, HPos.CENTER);
+        
+        dialog.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPane);
+        dialog.setScene(scene);
+        
+
+	}
+	public void initPopUp(Castle duke,Castle ennemy)
+	{
+		addNbTroupe.setOnAction(evt -> saisieTroupe(duke, ennemy));
+		dialog.show();	
+	}
+	public void saisieTroupe(Castle c, Castle c1)
+	{	
+		nbT = Integer.parseInt(textField.getText());
+		dialog.close();
+		c.attack2(c1,nbT);
+	}
 	/*private void checkCollisions() {
 		collision = false;
 

@@ -76,6 +76,11 @@ public class Castle extends Sprite {
 	 */
 	private List<Troops> troops = new ArrayList<>();
 	/**
+	 * Troupes attaquantes du château
+	 */
+	private List<Troops> Atroops = new ArrayList<>();
+
+	/**
 	 * Nombre d'unité en attente de formation
 	 */
 	private int waitinglist = 0; //le nombre d'unité en attente de formation
@@ -83,23 +88,6 @@ public class Castle extends Sprite {
 	 * Booléen qui indique si des troupe sont en formation
 	 */
 	private boolean formation = false;
-	
-	/**
-	 * Constructeur de Castle
-	 * @param layer
-	 * Plan
-	 * @param image
-	 * 	Image du château
-	 * @param x
-	 * 	Coordonnées x du château
-	 * @param y
-	 * 	Coordonnées y du château
-	 */
-	public Castle(Pane layer, Image image, double x, double y) {
-		super(layer,image, x, y);
-		init();
-		addToLayer();
-	}
 	
 	/**
 	 * Constructeur du château
@@ -124,15 +112,14 @@ public class Castle extends Sprite {
 		this.treasure = treasure;
 		this.level = level;
 		init();
-		addToLayer();
-		
+		addToLayer();	
 	}
-	
+		
 	/**
 	 * Initialise minX, maxX, minY, maxY, met une torupe dans le château
 	 */
 	private void init() {
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), 1.6, 50, 20);
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), 1.6, 50, 20,duke);
 		troops.add(t);
 		chevaliers = troops.size();
 		// calculate movement bounds of the player ship
@@ -167,7 +154,13 @@ public class Castle extends Sprite {
 	public List<Troops> getTroops() {
 		return troops;
 	}
-	
+	/**
+	 * Récupérer ATroops
+	 * @return la liste des troupes attaquantes
+	 */
+	public List<Troops> getATroops() {
+		return Atroops;
+	}
 	/**
 	 * Changer de liste de troupes
 	 * @param troops
@@ -212,7 +205,7 @@ public class Castle extends Sprite {
 	 */
 	public void createTroop()
 	{
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(),1.6, 50, 20);
+		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(),1.6, 50, 20,duke);
         troops.add(t);
 	}
 	
@@ -407,6 +400,54 @@ public class Castle extends Sprite {
 		if(nbEnnemy == 0) {
 			System.out.println("test");
 			c.setDuke(getDuke());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param c
+	 * @param nbTroupe
+	 */
+	public void attack2(Castle c, int nbTroupe)
+	{
+		if(nbTroupe > chevaliers) {
+			System.out.println("pas assez de troupe");
+			return;
+		}
+		else {
+		for(int i = 0 ; i < nbTroupe ; i++)
+		{
+			System.out.println("A l'assaut");
+			int size = Atroops.size();
+			Atroops.add(troops.get(0));
+			troops.remove(0);
+			Atroops.get(size).setxTarget(c.getX()+25);
+			Atroops.get(size).setyTarget(c.getY()+65);
+			Atroops.get(size).setCible(c);
+			Atroops.get(size).addToLayer();
+			chevaliers --;
+		}}
+
+	}
+	
+	/**
+	 * 
+	 */
+	public void UpdateTroops() {
+		for (int i = 0; i<Atroops.size(); i++) 
+		{
+			//les toupes n'attaquent plus = elles sont arrivées a destination, il faut les supprimer et infliger les degats
+			if(!Atroops.get(i).isAttacking()) {
+				Atroops.get(i).makeDamages();
+				Atroops.get(i).setMoved(true);
+			}
+			try {
+				Atroops.get(i).move2();
+				} catch (IndexOutOfBoundsException e) {
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+			}
 		}
 	}
 	
