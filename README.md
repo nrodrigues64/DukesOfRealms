@@ -66,13 +66,13 @@ Le but du jeu est donc, à l'aide de ses différents menus, de conquérir l'ense
 
 ##### Former une troupe
  
-Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorerie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" :  ![FormerTroupe](images/DoRFormer.png)
+Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorerie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" :  ![FormerTroupe](imageRM/DoRFormer.png)
 
-Une fenêtre Pop-up s'ouvrira sur laquelle vous pourrez saisir un entier.  ![SaisieTroupe](images/DoRSaisieTroupe.png)
+Une fenêtre Pop-up s'ouvrira sur laquelle vous pourrez saisir un entier.  ![SaisieTroupe](imageRM/DoRSaisieTroupe.png)
 
 Cliquez ensuite sur le bouton OK pour valider votre saisie. Les troupes seront maintenant en cours de formation.
 
-Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. ![SaisieTroupeVerif](images/DoRSaisieTroupeVerif.png)
+Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. ![SaisieTroupeVerif](imageRM/DoRSaisieTroupeVerif.png)
 
 ##### Attaquer un château
 
