@@ -179,13 +179,16 @@ public class Troops extends Sprite {
 	/**
 	 * Appliquer les dommages de l'attaque au château cible
 	 */
-	public void makeDamages() {
+	public void makeDamages(int duc) {
 		int enemy = cible.getChevaliers();
 		if (enemy == 0) {
+			if(owner != cible.getDuke())
+				System.out.println("Le chateau du baron n°"+ owner +" a pris possession du chateau n°" + cible.getDuke());
 			cible.setDuke(this.owner);
 		}
 		else {
-			System.out.println("Attaquant : " + damages + " Défenseur : " + cible.getTroops().get(0).getHealth());
+			if(duc == owner)
+				System.out.println("Attaquant : " + damages + " Défenseur : " + cible.getTroops().get(0).getHealth());
 			if(damages > cible.getTroops().get(0).getHealth())
 				cible.getTroops().remove(0);
 			else
