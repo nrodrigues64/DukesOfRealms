@@ -12,14 +12,14 @@ Les joueurs disposent de châteaux générant des richesses avec lesquels ils po
 
  
 
-![screenshot](DoRdescriptionJeu.png)
+![screenshot](images/DoRdescriptionJeu.png)
 
 
 ## Mode d'emploi
 ### Lancement
 
 Au lancement vous devez saisir un entier qui déterminera votre nom durant le jeu qui fait office de pseudo.
-![pseudo](DoRPseudo.png)
+![pseudo](images/DoRPseudo.png)
 
 
 ### Régles du jeu
@@ -28,13 +28,13 @@ Un fois votre pseudo saisie le jeu commence. Vous pourrez apercevoir plusieur ch
 
 Votre château a vous est le château différent des autres qui se distingue facilement par sa couleur :
 
-![chateauDuc](DoRchateauDuc.png)
+![chateauDuc](images/DoRchateauDuc.png)
 
 Vous pouvez intéragir avec le jeu en faisant un clique droit de la souris sur les châteaux, lors de ce clique un menu contextuel s'ouvrira en fonction de si le château est allié ou ennemi.
 
 Si le chateau est allié vous aurez les options suivantes : 
 
-![menuChateauDuc](DoRMenuChateauDuc.png)
+![menuChateauDuc](images/DoRMenuChateauDuc.png)
 
 - Owner: Permet de savoir à qui appartient le château
 - Treasure: Permet de savoir quelle est la trésorie actuelle du château
@@ -46,7 +46,7 @@ Si le chateau est allié vous aurez les options suivantes :
 
 Si le château n'est pas allié vous aurez les options suivantes :
 
-![MenuChâteauE](DoRMenuChateauE.png)
+![MenuChâteauE](images/DoRMenuChateauE.png)
 
 Ce menu à des options similaires au menu allié, Owner, Treasure, Level, Troupe(s) y sont présents le changement est le fait de pouvoir attaquer le château.
 
@@ -56,19 +56,19 @@ Le but du jeu est donc, à l'aide de ses différents menus, de conquérir l'ense
 
 #### Former une troupes 
 
-Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" : ![FormerTroupe](DoRFormer.png)
+Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" : ![FormerTroupe](images/DoRFormer.png)
 
-Une fenêtre PopUp s'ouvrira sur laquelle vous pourrez saisir un entier. ![SaisieTroupe](DoRSaisieTroupe.png)
+Une fenêtre PopUp s'ouvrira sur laquelle vous pourrez saisir un entier. ![SaisieTroupe](images/DoRSaisieTroupe.png)
 
 Cliquez ensuite sur le bouton OK pour valider votre saisie. Les troupes seront maintenant en cours de formation.
 
-Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. ![SaisieTroupeVerif](DoRSaisieTroupeVerif.png)
+Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. ![SaisieTroupeVerif](images/DoRSaisieTroupeVerif.png)
 
 #### Attaquer un château
 
-Pour attaquer un château il faut que celui-ci ne soit pas un allié. Vous aurez donc la possibilité de cliquer sur "Attaquer" : ![Attaquer](DoRAttaquer.png)
+Pour attaquer un château il faut que celui-ci ne soit pas un allié. Vous aurez donc la possibilité de cliquer sur "Attaquer" : ![Attaquer](images/DoRAttaquer.png)
 
-De la même façon que vous avez formé des troupes, une fénêtre s'ouvre où vous pouvez saisir un chiffre qui correspond au nombre de troupe que vous désirez envoyer. ![SaisieTroupeA](DoRSaisieTroupeA.png)
+De la même façon que vous avez formé des troupes, une fénêtre s'ouvre où vous pouvez saisir un chiffre qui correspond au nombre de troupe que vous désirez envoyer. ![SaisieTroupeA](images/DoRSaisieTroupeA.png)
 
 Cliquez ensuite sur OK pour valider votre saisie. Vous pourrez ensuite apercevoir vos troupes se diriger vers votre cible.
 
