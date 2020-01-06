@@ -338,15 +338,21 @@ public class Castle extends Sprite {
 		treasure += 50 +(int)((level-1)*30) ;
 	}
 	
+	/**
+	 * envoie l'ordre d'attaquer
+	 */
 	public void makeOrder() {
 		Random random = new Random();
-		int nbtroupes = 1;
-				//random.nextInt(this.getChevaliers())-2;
-		if (order == 1) {
-			this.attack2(cible, nbtroupes);
-			this.setOrder(0);
-		}
+		int a = this.getChevaliers();
+		if (a <1) {a=1;}
+		int nbtroupes = random.nextInt(a);
 		
+		if (order == 1) {
+		for(int i = 0; i<nbtroupes; i++) {
+			this.attack2(cible, 1);
+		}
+		this.setOrder(0);
+		}
 	}
 	
 }

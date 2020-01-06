@@ -167,7 +167,6 @@ public class Troops extends Sprite {
 			      }
 
 			    	  else {
-			    	System.out.println("test");
 			    	attacking = false;
 			    }
 

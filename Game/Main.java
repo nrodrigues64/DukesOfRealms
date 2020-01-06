@@ -643,17 +643,17 @@ public class Main extends Application {
 		  			  if(c.getDuke()!=k.getHome().getDuke()) {
 		  			  Random random = new Random();
 					  int choice = random.nextInt(10);
+					  int cible = i;
 					  
 					  switch(choice) {
 					  case 1:
 						  c.incWaitingList(1);
 						  break;
 					  case 2:
-						  c.incWaitingList(1);
+						  c.incWaitingList(2);
 						  break;
 					  case 3:
-						  int cible = i;
-						  while(cible == i) {cible = random.nextInt(6);}
+						  while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
 						  c.setOrder(1);
 						  if (cible == 5) {
 							  c.setCible(k.getHome());
@@ -665,7 +665,32 @@ public class Main extends Application {
 					  case 4:
 						  c.levelUp();
 						  break;
-						  
+					  case 5:
+						  while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
+						  c.setOrder(1);
+						  if (cible == 5) {
+							  c.setCible(k.getHome());
+						  }
+						  else {
+							  c.setCible(k.getCastles().get(cible));
+						  }
+						  break;
+					  case 6:
+						  while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
+						  c.setOrder(1);
+						  if (cible == 5) {
+							  c.setCible(k.getHome());
+						  }
+						  else {
+							  c.setCible(k.getCastles().get(cible));
+						  }
+						  break;
+					  case 7:
+						  c.incWaitingList(2);
+						  break;
+					  case 8:
+						  c.incWaitingList(1);
+						  break;
 					  	}
 					  }
 		  			  				
