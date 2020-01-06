@@ -134,7 +134,7 @@ public class Main extends Application {
 							removeSprites(sprite.getATroops());							
 						});
 						for (int i = 0; i< k.getCastles().size(); i++)
-						{	l
+						{	
 							k.getCastles().get(i).makeOrder(k.getHome().getDuke());
 						}
 					}
