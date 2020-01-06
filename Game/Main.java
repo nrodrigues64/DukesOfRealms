@@ -6,22 +6,40 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.HashMap;
+
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler; 
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+ 
 
-
+/**
+ * <b>Classe Principale Main, exécute l'application.</b>
+ * @author Nicolas RODRIGUES et Tristan PREVOST
+ *
+ */
 public class Main extends Application {
-	private Pane playfieldLayer;
 	
+	private Pane playfieldLayer;
+	private Stage dialogAttack = new Stage();
+	private Stage dialogForm = new Stage();
+	private Stage dialogPseudo = new Stage();
 	private Image castleImage;
 	private Image castleEnemy;
 	private Kingdom k;
@@ -29,11 +47,21 @@ public class Main extends Application {
 	private List<Castle> lc = new ArrayList<>();
 	private Scene scene;
 	double xTarget;
+	private int nbT;
 	double yTarget;
 	private AnimationTimer gameLoop;
 	private HashMap<String, Boolean> currentlyActiveKeys = new HashMap<>();
 	static boolean pause = false;
-	
+	private Button addNbTroupeAttack = new Button();
+	private TextField textFieldAttack = new TextField();
+	private Button addNbTroupeForm = new Button();
+	private TextField textFieldForm = new TextField();
+	private Button choixPseudo = new Button();
+	private TextField textFieldPseudo = new TextField();
+	private boolean pseudo = false;
+	GridPane gridPaneForm = new GridPane();
+	GridPane gridPanePseudo = new GridPane();
+	GridPane gridPaneAttack = new GridPane();
 	Group root;
 
 	@Override
@@ -64,39 +92,39 @@ public class Main extends Application {
 			@Override
 			public void handle(long now) {
 				
-
+				if(pseudo) {
 				
-				if (removeActiveKey("P")) {
-                    System.out.println("game paused");
-                    pause = !pause;
-                }
-				if (!pause) {
-
-					k.getHome().UpdateTroops();
-					for (int i = 0; i< k.getCastles().size(); i++)
-					{
-						k.getCastles().get(i).UpdateTroops();
-					}
-					
-					// update sprites in scene
-					k.getHome().updateUI();
-					
-					k.getHome().getTroops().forEach(sprite -> sprite.updateUI());
-					
-					//player.checkRemovability();
-					removeSprites(k.getHome().getTroops());
-					removeSprites(k.getHome().getATroops());
-					k.getCastles().forEach(sprite -> 
-					{
-						if(sprite.getDuke() == k.getHome().getDuke())
-						{
-							removeSprites(sprite.getATroops());
+					if (removeActiveKey("P")) {
+		                System.out.println("game paused");
+		                pause = !pause;
+		            }
+					if (!pause) {
+						
+						k.getHome().UpdateTroops();
+						for (int i = 0; i< k.getCastles().size(); i++)
+						{							
+							k.getCastles().get(i).UpdateTroops();
 						}
-					});
+						// update sprites in scene
+						k.getHome().updateUI();
+						
+						k.getHome().getTroops().forEach(sprite -> sprite.updateUI());
+						
+						//player.checkRemovability();
+						removeSprites(k.getHome().getTroops());
+						removeSprites(k.getHome().getATroops());
+						k.getCastles().forEach(sprite -> 
+						{
+							removeSprites(sprite.getATroops());							
+						});
+						for (int i = 0; i< k.getCastles().size(); i++)
+						{							
+							k.getCastles().get(i).makeOrder();
+						}
+					}
 				}
 				
 			}
-			
 			
 
 		
@@ -121,144 +149,193 @@ public class Main extends Application {
 	private void loadGame() {
 		castleImage = new Image(getClass().getResource("/images/redcastle.png").toExternalForm(), 100, 100, true, true);
 		castleEnemy = new Image(getClass().getResource("/images/white_castle.jpg").toExternalForm(), 100,100,true,true);
-		createPlayer();
+		
+		initStagePseudo();
+		
 	}
 
-
+	/**
+	 * Créer le Royaume du jeu
+	 */
 	private void createPlayer() {
 		Random random = new Random();
-		//le random est fait dans les limites de la taille de l'écran
-				double x = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
-				double y = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
-				player = new Castle(playfieldLayer, castleImage, x, y,666, 500, 1);
-				lc.add(player);
-				
-				int i = 0;
-				while(i < 5)
-				{
-					int j = i+1;
-					double x1 = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
-					double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
-					if(check_castle(lc,x1,y1)) {
-						Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), 500, 1,j);
-						lc.add(c);
-						i++;
-					}
-					
-				}
+		//Coordonnées choisis aléatoirement dans les limites de la taille de l'écran
+		double x = random.nextInt((int)(Settings.SCENE_WIDTH -  castleImage.getWidth()) + 1);
+		double y = random.nextInt((int)(Settings.SCENE_HEIGHT - castleImage.getHeight()) + 1);
+		
+		//Création du château du duc
+		player = new Castle(playfieldLayer, castleImage, x, y,Integer.parseInt(textFieldPseudo.getText()), 500, 1);
+		//Le château est sélectionner par défaut pour l'attaque
+		player.setSelected(true);
+		//Ajout à la liste pour vérification ultérieur
+		lc.add(0, player);
+		
+		int i = 0;
+		
+		//Création au minimum de 5 château qui respecte les condition établie
+		while(i < 5)
+		{
+			//Coordonnées choisis aléatoirement dans les limites de la taille de l'écran
+			double x1 = random.nextInt((int)(Settings.SCENE_WIDTH -  castleEnemy.getWidth()) + 1);
+			double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleEnemy.getHeight()) + 1);
+			//Test de nom chevauchement de château
+			if(check_castle(lc,x1,y1)) {
+				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), 500, 1);
+				lc.add(c);
+				i++;
+			}
+			
+		}
+		//Retrait du château du duc de la liste
 		player = lc.remove(0);
 		moneyDelay();
-		
+		//Création du Royaume
 		k = new Kingdom(player,lc);
 		
+		//Création du menu des château des ennemies
 		k.getCastles().forEach(sprite -> sprite.getView().setOnContextMenuRequested(e -> {
 				ContextMenu contextMenu = new ContextMenu();
+				
+				//Création des items du menu
 				String Duke = "Owner : ";
 				Duke = Duke.concat(Integer.toString(sprite.getDuke()));
 				String Treasure = "Treasure : ";
-				Treasure = Treasure.concat(Integer.toString(sprite.getTreasur()));
+				Treasure = Treasure.concat(Integer.toString(sprite.getTreasure()));
 				String Level = "Level : ";
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
 				String chevaliers = "chevaliers : ";
 				chevaliers = chevaliers.concat(Integer.toString(sprite.getChevaliers()));
+
 				MenuItem chevalier= new MenuItem(chevaliers);
 				MenuItem duke = new MenuItem(Duke);
 				MenuItem treasure= new MenuItem(Treasure);
 				MenuItem level= new MenuItem(Level);
+				
+				//Ajout des items
 				contextMenu.getItems().addAll(duke, treasure, level, chevalier);
 				
+				//Test si château est allié
 				if(sprite.getDuke() == k.getHome().getDuke())
 				{
-					
+					//
 					MenuItem levelup = new MenuItem("Level Up");
 					levelup.setOnAction(evt -> sprite.levelUp());
-					contextMenu.getItems().add(levelup);
-					MenuItem ally = new MenuItem("Amie");
-					contextMenu.getItems().add(ally);
 					MenuItem former = new MenuItem("Former un chevalier");
 					former.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								
-								sprite.incChevalier();
+								initButtonOkForm(sprite);
 							e.consume();
-						}});
-					MenuItem former5 = new MenuItem("Former 5 chevaliers");
-					former5.setOnAction(new EventHandler<ActionEvent>() {
-						 public void handle(ActionEvent e) {
-								
-								sprite.incWaitingList(4);;
-							e.consume();
-						}});
-					MenuItem former10 = new MenuItem("Former 10 chevaliers");
-					former10.setOnAction(new EventHandler<ActionEvent>() {
-						 public void handle(ActionEvent e) {
-								
-								sprite.incWaitingList(9);;
-							e.consume();
-						}});
+						}});				
 					MenuItem select = new MenuItem("Select");
+					if(sprite.isSelected())
+						select.setText("Selected");
 					select.setOnAction(evt -> selected(sprite));
-					contextMenu.getItems().addAll(former,former5, former10,select);
+					
+					contextMenu.getItems().addAll(levelup, former, select);
 				} else {
+					
 					MenuItem attack = new MenuItem("Attaquer");
-					attack.setOnAction(evt -> getSelected().attack2(sprite, 1));
+					attack.setOnAction(evt -> initButtonOkAttack(getSelected(),sprite));
+					
 					contextMenu.getItems().add(attack);
 					
 				}
 				
 				contextMenu.show(sprite.getView(), e.getScreenX(), e.getScreenY());
 		}));
+		
+		//Création du menu du château du duc
 		k.getHome().getView().setOnContextMenuRequested(e -> {
 			ContextMenu contextMenu = new ContextMenu();
+			
+			//Création des items
 			String Duke = "Owner : ";
-			Duke = Duke.concat(Integer.toString(player.getDuke()));
+			Duke = Duke.concat(Integer.toString(k.getHome().getDuke()));
 			String Treasure = "Treasure : ";
-			Treasure = Treasure.concat(Integer.toString(player.getTreasur()));
+			Treasure = Treasure.concat(Integer.toString(k.getHome().getTreasure()));
 			String Level = "Level : ";
-			Level = Level.concat(Integer.toString(player.getLevel()));
+			Level = Level.concat(Integer.toString(k.getHome().getLevel()));
 			String chevaliers = "chevaliers : ";
-			chevaliers = chevaliers.concat(Integer.toString(player.getChevaliers()));
-			MenuItem select = new MenuItem("Select");
+			chevaliers = chevaliers.concat(Integer.toString(k.getHome().getChevaliers()));
+			
+			
 			MenuItem duke = new MenuItem(Duke);
 			MenuItem treasure= new MenuItem(Treasure);
 			MenuItem level= new MenuItem(Level);
 			MenuItem chevalier = new MenuItem(chevaliers);
 			MenuItem levelup = new MenuItem("Level Up");
-			select.setOnAction(evt -> selected(player));
-			levelup.setOnAction(evt -> player.levelUp());
 			
-			contextMenu.getItems().addAll(duke, treasure, level,levelup,chevalier);
+			levelup.setOnAction(evt -> k.getHome().levelUp());
+			
 			MenuItem former = new MenuItem("Former un chevalier");
 			former.setOnAction(new EventHandler<ActionEvent>() {
 				 public void handle(ActionEvent e) {
+						initButtonOkForm(k.getHome());
 						
-						k.getHome().incChevalier();
 					e.consume();
 				}});
-			MenuItem former5 = new MenuItem("Former 5 chevaliers");
-			former5.setOnAction(new EventHandler<ActionEvent>() {
-				 public void handle(ActionEvent e) {
-						
-						k.getHome().incWaitingList(4);;
-					e.consume();
-				}});
-			MenuItem former10 = new MenuItem("Former 10 chevaliers");
-			former10.setOnAction(new EventHandler<ActionEvent>() {
-				 public void handle(ActionEvent e) {
-						
-						k.getHome().incWaitingList(9);;
-					e.consume();
-				}});
-			contextMenu.getItems().addAll(former,former5, former10,select);
+			
+			MenuItem select = new MenuItem("Select");
+			if(k.getHome().isSelected())
+				select.setText("Selected");
+			select.setOnAction(evt -> selected(k.getHome()));
+			
+			contextMenu.getItems().addAll(duke, treasure, level, levelup, chevalier, former, select);
 			contextMenu.show(k.getHome().getView(), e.getScreenX(), e.getScreenY());
 		});
+    	
+
+		IA();
 	}
 	
-	//check if a castle can be add at this position
+	/**
+	 * Augmente la trésorie des châteaux de 50 toutes les secondes
+	 */
+	public void moneyDelay() {
+		
+		Thread t = new Thread() {
+		      
+			public void run() {
+		    	  
+				while(true) {
+		    		  
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    	
+					if (!Main.pause) {
+		    		
+						k.getHome().incMoney();
+		    		
+						for(int i = 0; i< k.getCastles().size(); i++) {
+							k.getCastles().get(i).incMoney();		
+						}
+					}
+				}
+			}
+		};  
+		t.start();
+
+	}
+	
+	/**
+	 * Verifie que le château peut être ajouté à cette position
+	 * @param lc
+	 * 	Liste des châteaux
+	 * @param x
+	 * 	Coordonnée x où le chateau va être ajouté
+	 * @param y
+	 * 	Coordonnée y où le chateau va être ajouté
+	 * @return true si le château peut être ajouté à ses coordonnées, false sinon
+	 */
 	private boolean check_castle(List<Castle> lc, double x, double y) {
 		boolean in = true;
 		
-		// 250 au lieu de 150 pour avoir de l'espace entre chateau
+		// 250 au lieu de 150 pour avoir de l'espace entre châteaux
 		double x1 = x + 150;
 		double y1 = y + 150;
 
@@ -286,20 +363,38 @@ public class Main extends Application {
 
 		return true;
 	}
+	
+	/**
+	 * Sélectionner un château pour attaquer
+	 * @param c
+	 * 	Château attaquant
+	 */
 	private void selected(Castle c)
 	{
+		//Si c est le château du duc :
 		if(c == k.getHome())
 		{
+			//Duc est sélectionné
 			k.getHome().setSelected(true);
+			//Tous les autres châteaux sont déselectionnés
 			k.getCastles().forEach(sprite -> sprite.setSelected(false));
 		} else {
+			//Si duc sélectionné
 			if(k.getHome().isSelected())
+				//Duc déselectionné
 				k.getHome().setSelected(false);
+			//Tous les châteaux sont déselectionné
 			k.getCastles().forEach(sprite -> sprite.setSelected(false));
+			//Sélection du château voulu
 			c.setSelected(true);
 		}
 		
 	}
+	
+	/**
+	 *Récupérer le château sélectionné
+	 * @return le château sélectionné pour l'attaque
+	 */
 	private Castle getSelected()
 	{
 		
@@ -311,6 +406,207 @@ public class Main extends Application {
 		}
 		return k.getHome();
 	}
+	
+	/**
+	 * Initialiser le PopUp (Fenêtre) pour saisie de troupe attaquante
+	 */
+	public void initStageAttack()
+	{
+		//Configuration de la grille du la fenêtre
+        
+        gridPaneAttack.setVgap(10);
+        gridPaneAttack.setHgap(10);
+        gridPaneAttack.setPadding(new Insets(10));
+        
+        //Création des items présents dans la fenêtre
+		Label label = new Label("Saisissez un nombre de troupe pour l'attaque");
+		addNbTroupeAttack.setText("OK");	
+		
+		//Ajout des items à la grille
+		gridPaneAttack.add(label, 0, 0);
+        gridPaneAttack.add(textFieldAttack, 0, 1);
+        gridPaneAttack.add(addNbTroupeAttack, 0, 3, 2, 1);
+        GridPane.setHalignment(addNbTroupeAttack, HPos.CENTER);       
+        dialogAttack.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPaneAttack);
+        dialogAttack.setScene(scene);
+	}
+	
+	/**
+	 * Configurer le bouton OK du PopUp et afficher le PopUp
+	 * @param c
+	 * 	Château attaquant
+	 * @param c1
+	 * 	Château cible
+	 */
+	public void initButtonOkAttack(Castle c,Castle c1)
+	{
+		addNbTroupeAttack.setOnAction(new EventHandler<ActionEvent>() {
+			 public void handle(ActionEvent e) {
+					try 
+			        { 
+			            // checking valid integer using parseInt() method 
+			            Integer.parseInt(textFieldAttack.getText());		   
+						saisieTroupe(c,c1);
+						dialogForm.close(); 
+			        }catch (NumberFormatException e1){ 
+			        	Label label = new Label("Saisissez un entier");
+			        	gridPaneForm.add(label, 0, 2);
+			        	
+				    } 
+					
+					
+				e.consume();
+			}});
+		dialogAttack.show();	
+	}
+	
+	/**
+	 * Récupérer le nombre de troupe pour l'attaque et attaquer
+	 * @param c
+	 * 	Château attaquant
+	 * @param c1
+	 * 	Château cible
+	 */
+	public void saisieTroupe(Castle c, Castle c1)
+	{	
+		nbT = Integer.parseInt(textFieldAttack.getText());
+		dialogAttack.close();
+		c.attack2(c1,nbT);
+	}
+	
+	/**
+	 * Initialiser le PopUp (Fenêtre) pour saisie des troupes à former
+	 */
+	public void initStageForm()
+	{
+		//Configuration de la grille de la fenêtre
+        
+        gridPaneForm.setVgap(10);
+        gridPaneForm.setHgap(15);
+        gridPaneForm.setPadding(new Insets(10));
+        
+        //Ajout des items à la grille
+		Label label = new Label("Saisissez un nombre de troupe à former");
+		addNbTroupeForm.setText("OK");	
+		gridPaneForm.add(label, 0, 0);
+        gridPaneForm.add(textFieldForm, 0, 1);
+        gridPaneForm.add(addNbTroupeForm, 0, 3, 2, 1);
+        GridPane.setHalignment(addNbTroupeForm, HPos.CENTER);       
+        dialogForm.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPaneForm);
+        dialogForm.setScene(scene);
+	}
+	
+	/**
+	 * Configurer le bouton OK du PopUp et afficher le PopUp
+	 * @param c
+	 * 	Château attaquant
+	 */
+	public void initButtonOkForm(Castle c)
+	{
+		addNbTroupeForm.setOnAction( 
+				new EventHandler<ActionEvent>() {
+			 public void handle(ActionEvent e) {
+					try 
+			        { 
+			            // checking valid integer using parseInt() method 
+			            Integer.parseInt(textFieldForm.getText());		   
+						saisieTroupeForm(c);
+						dialogForm.close(); 
+			        }catch (NumberFormatException e1){ 
+			        	Label label = new Label("Saisissez un entier");
+			        	gridPaneForm.add(label, 0, 2);
+			        	
+				    } 
+					
+					
+				e.consume();
+			}}
+				);
+		dialogForm.show();	
+	}
+	
+	/**
+	 * Récupérer le nombre de troupe à former et former
+	 * @param c
+	 * 	Château attaquant
+	 */
+	public void saisieTroupeForm(Castle c)
+	{	
+		nbT = Integer.parseInt(textFieldForm.getText());
+		dialogForm.close();
+		c.incWaitingList(nbT-1);
+	}
+	
+	/**
+	 * Initialiser le PopUp (Fenêtre) pour saisie des troupes à former
+	 */
+	public void initStagePseudo()
+	{
+		//Configuration de la grille de la fenêtre
+        
+        gridPanePseudo.setVgap(10);
+        gridPanePseudo.setHgap(10);
+        gridPanePseudo.setPadding(new Insets(10));
+        
+        //Ajout des items à la grille
+		Label label = new Label("Choisissez un Pseudo(un entier):");
+		choixPseudo.setText("OK");	
+		gridPanePseudo.add(label, 0, 0);
+		textFieldPseudo.textProperty().removeListener(new ChangeListener<String>() {
+		    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		        String newValue) {
+		        if (!newValue.matches("\\d*")) {
+		            textFieldPseudo.setText(newValue.replaceAll("[^\\d]", ""));
+		        }
+		    }
+		});
+        gridPanePseudo.add(textFieldPseudo, 0, 1);
+        gridPanePseudo.add(choixPseudo, 0, 3, 2, 1);
+        GridPane.setHalignment(choixPseudo, HPos.CENTER);       
+        dialogPseudo.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPanePseudo);
+        dialogPseudo.setScene(scene);
+        initButtonOkPseudo();
+	}
+	
+	/**
+	 * Configurer le bouton OK du PopUp et afficher le PopUp
+	 * @param c
+	 * 	Château attaquant
+	 */
+	public void initButtonOkPseudo()
+	{
+		choixPseudo.setOnAction(
+				new EventHandler<ActionEvent>() {
+					 public void handle(ActionEvent e) {
+							try 
+					        { 
+					            // checking valid integer using parseInt() method 
+					            Integer.parseInt(textFieldPseudo.getText());
+					            createPlayer();
+								initStageAttack();
+								initStageForm();
+					            pseudo = true;
+								dialogPseudo.close(); 
+					        }catch (NumberFormatException e1){ 
+					        		
+						            Label l = new Label("Saisissez un entier");
+						            gridPanePseudo.add(l, 0, 2);
+						    } 
+							
+							
+						e.consume();
+					}});
+		dialogPseudo.show();	
+	}
+
+	/**
+	 * Supprimer un liste de sprite du plateau de jeu
+	 * @param spriteList
+	 * 	Liste de sprite à supprimer
+	 */
 	private void removeSprites(List<? extends Sprite> spriteList) {
 		Iterator<? extends Sprite> iter = spriteList.iterator();
 		while (iter.hasNext()) {
@@ -324,51 +620,64 @@ public class Main extends Application {
 			}
 		}
 	}
-
-	/*private void checkCollisions() {
-		collision = false;
-		for (Enemy enemy : enemies) {
-			for (Missile missile : missiles) {
-				if (missile.collidesWith(enemy)) {
-					enemy.damagedBy(missile);
-					missile.remove();
-					collision = true;
-					scoreValue += 10 + (Settings.SCENE_HEIGHT - player.getY()) / 10;
-				}
-			}
-			if (player.collidesWith(enemy)) {
-				collision = true;
-				enemy.remove();
-				player.damagedBy(enemy);
-				if (player.getHealth() < 1)
-					gameOver();
-			}
-		}
-	}*/
-	public void moneyDelay() {
-		Thread t = new Thread() {
-		      public void run() {
-		    	  while(true) {
-		    		  try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		    	if (!Main.pause) {
-		    		k.getHome().incMoney();
-		    		for(int i = 0; i< k.getCastles().size(); i++) {
-		    			k.getCastles().get(i).incMoney();
-		    		}
-		        }
-		    }}};
-
-		  t.start();
-
-	}
 	
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public void IA() {
+		
+		Thread t = new Thread() {
+		    public void run() {		    	
+		  	  while(true) {
+		  		  if(!pause) {
+		  		  try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		  		//pour tout les chateaux autres que les siens
+		  		  for (int i = 0; i < k.getCastles().size(); i++) {
+		  			  Castle c = k.getCastles().get(i);
+		  			  if(c.getDuke()!=k.getHome().getDuke()) {
+		  			  Random random = new Random();
+					  int choice = random.nextInt(10);
+					  
+					  switch(choice) {
+					  case 1:
+						  c.incWaitingList(1);
+						  break;
+					  case 2:
+						  c.incWaitingList(1);
+						  break;
+					  case 3:
+						  int cible = i;
+						  while(cible == i) {cible = random.nextInt(6);}
+						  c.setOrder(1);
+						  if (cible == 5) {
+							  c.setCible(k.getHome());
+						  }
+						  else {
+							  c.setCible(k.getCastles().get(cible));
+						  }
+						  break;
+					  case 4:
+						  c.levelUp();
+						  break;
+						  
+					  	}
+					  }
+		  			  				
+		  			  }}
+		  		  }
+		  	  
+		  	  
+			    	 
+			    }};
+			    	t.start();
+			    
+			  
 	}
 
 }
