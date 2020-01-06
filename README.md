@@ -50,13 +50,13 @@ Si le château n'est pas allié vous aurez les options suivantes :
 
 Ce menu à des options similaires au menu allié, Owner, Treasure, Level, Troupe(s) y sont présents le changement est le fait de pouvoir attaquer le château.
 
--Attaquer: Permet d'attaquer le château depuis le château actuellement sélectionné.
+- Attaquer: Permet d'attaquer le château depuis le château actuellement sélectionné.
 
 Le but du jeu est donc, à l'aide de ses différents menus, de conquérir l'ensemble du plateau de jeu.
 
 #### Former une troupes 
 
-Pour former une troupe il faut donc que le château soit un château vous appartenant. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" : ![FormerTroupe](DoRFormer.png)
+Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" : ![FormerTroupe](DoRFormer.png)
 
 Une fenêtre PopUp s'ouvrira sur laquelle vous pourrez saisir un entier. ![SaisieTroupe](DoRSaisieTroupe.png)
 Cliquez ensuite sur le bouton OK pour valider votre saisie. Les troupes seront maintenant en cours de formation.
@@ -67,21 +67,15 @@ Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. 
 
 Pour attaquer un château il faut que celui-ci ne soit pas un allié. Vous aurez donc la possibilité de cliquer sur "Attaquer" : ![Attaquer](DoRAttaquer.png)
 
+De la même façon que vous avez formé des troupes, une fénêtre s'ouvre où vous pouvez saisir un chiffre qui correspond au nombre de troupe que vous désirez envoyer. ![SaisieTroupeA](DoRSaisieTroupeA.png)
+Cliquez ensuite sur OK pour valider votre saisie. Vous pourrez ensuite apercevoir vos troupes se diriger vers votre cible.
 
-## Pause active
+#### Avoir plus de ressources
 
-Modifier le comportement du jeu pour créer une pause active lors d'un appui sur une touche spécifique. Dans cet état, le temps est figé mais il est toujours possible d'interagir avec le jeu (accès au menu contextuel du joueur par exemple).
+Pour vous enrichir la seul solution est d'attendre, votre trésorie augmente automatiquement au fil du temps. Bien évidemment il est possible de gagner plus d'argent, pour cela il vous faut augmenter le niveau de votre château ce qui augmentera vos revenus. De plus lorsque vous vous saisissez d'un château l'ensemble de sa trésorie reste à votre disposition.
 
-La gestion du temps se fait dans la class `Main.java` avec le code suivant:
+Pour augmenter le niveau de votre château cliquez sur Level Up : ![LevelUp](DoRLevelUp.png)
 
-```java
-gameLoop = new AnimationTimer() {
-  @Override
-  public void handle(long now) {
-      // boucle du jeu 
-  }
-}
-gameLoop.start();
-```
+Un message s'affichera sur la ligne de commande vous permettant de savoir combien de temps prendra l'amélioration.
 
 
