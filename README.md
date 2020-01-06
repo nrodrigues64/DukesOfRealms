@@ -72,6 +72,17 @@ De la même façon que vous avez formé des troupes, une fénêtre s'ouvre où v
 
 Cliquez ensuite sur OK pour valider votre saisie. Vous pourrez ensuite apercevoir vos troupes se diriger vers votre cible.
 
+#### Prise de château
+
+Pour prendre pocession d'un château, il vous faut l'attaquer avec vos troupes. Le prise se fait automatiquement lorsque le château ciblé n'a plus de troupes pour le défendre. L'attaque se déroule comme suit :
+
+- La première troupes attaquante va attaquer la première troupes du château défenseur
+- Pour tuer une troupes en défense il faut faire baisser ses points des vie à zéro.
+- Pour faire baisser les points de vie d'une troupe, l'attaque de la troupe attaquante est pris en compte; ainsi le défenseur prendra autant de dégat que l'attaquant à de dégat. Une fois ses dégats infligé l'attaquant est détruit.
+
+
+Ici on a qu'un seul type de troupe qui ont toutes les même caractéristique. Chaque troupes a 50 points de vie et 20 points de dégats, il faudra donc 3 troupes attaquantes pour venir à bout d'une troupes défensives.
+
 #### Avoir plus de ressources
 
 Pour vous enrichir la seul solution est d'attendre, votre trésorie augmente automatiquement au fil du temps. Bien évidemment il est possible de gagner plus d'argent, pour cela il vous faut augmenter le niveau de votre château ce qui augmentera vos revenus. De plus lorsque vous vous saisissez d'un château l'ensemble de sa trésorie reste à votre disposition.
@@ -79,5 +90,37 @@ Pour vous enrichir la seul solution est d'attendre, votre trésorie augmente aut
 Pour augmenter le niveau de votre château cliquez sur Level Up : ![LevelUp](DoRLevelUp.png)
 
 Un message s'affichera sur la ligne de commande vous permettant de savoir combien de temps prendra l'amélioration.
+
+
+## Fonctionnalité
+
+Liste des fonctionnalités de notre jeu
+
+### Formation d'une troupe
+
+Il est possible de former une troupe en cliquant sur le bouton correspondant du menu. Lors d'un clique une fenêtre s'ouvre vous dmeandant un nombre de troupes à former. Une fois valider le programme va créer autant d'objet Troops que vous le désirez, et va les ajouter à la liste de troupes de l'objet Castle appelant.
+
+### Attaque d'un château
+
+L'attaque de château se fait également suite au clique sur le menu. Une fenêtre s'ouvre vous demandant un nombre de troupes participantes à l'attaque. Une fois validé, le programme créée une nouvelle liste de troupes, il va pour ce faire ajouter une troupes présentes dans les troupes du château et supprimer celle-ci de la liste.
+Une fois la nouvelle liste compléter l'attaque débute et vous pouvez apercevoir les troupes ce déplacer.
+
+### Prise de château
+
+Pour prendre pocession d'un château, il vous faut l'attaquer avec vos troupes. Le prise se fait automatiquement lorsque le château ciblé n'a plus de troupes pour le défendre. L'attaque se déroule comme suit :
+
+- La première troupes attaquante va attaquer la première troupes du château défenseur
+- Pour tuer une troupes en défense il faut faire baisser ses points des vie à zéro.
+- Pour faire baisser les points de vie d'une troupe, l'attaque de la troupe attaquante est pris en compte; ainsi le défenseur prendra autant de dégat que l'attaquant à de dégat. Une fois ses dégats infligé l'attaquant est détruit.
+
+
+Ici on a qu'un seul type de troupe qui ont toutes les même caractéristique. Chaque troupes a 50 points de vie et 20 points de dégats, il faudra donc 3 troupes attaquantes pour venir à bout d'une troupes défensives.
+
+Pour ce faire à chaques troupes attaquantes on enlève un nombre de points de vie à la troupe défensive. une fois ses points de vie à zéro la troupe est supprimée.
+
+### Augmentation du niveau du château
+
+Le joueur a la possibilité d'augmenter le niveau de son château, pour se faire il clique sur "Level Up". Ce qui aura pour effet d'enclacher l'augmentation du niveau du château. Le château vera ainsi ses revenus augmenter de 30 pour chaque niveau. Au niveau 1 un château gnagne 50 florins/s, au niveau 2 80/s, niveau 3 110/s, etc.
+
 
 
