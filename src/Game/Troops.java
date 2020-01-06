@@ -1,113 +1,204 @@
 package Game;
 
-import SampleGame.Settings;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
+
+
+/**
+ * <b>Troops est la classe représentant une troupe du jeu.</b>
+ * <p>
+ * Une troupe est caractérisée par les informations suivantes :
+ * <ul>
+ * <li>Une vitesse de déplacement</li>
+ * <li>Un nombre de dommages</li>
+ * <li>Hérite des mêmes attributs que Sprite</li>
+ * </ul>
+ * @see Sprite
+ * @author Nicolas RODRIGUES et Tristan PREVOST
+ *
+ */
 public class Troops extends Sprite {
-	private String name;
-	private int productionCost;
-	private int productionTime;
-	private double speed;
+	/**
+	 * Nombre de point de vie d'une troupe
+	 * 
+	 * @see Troops#getHealth()
+	 * @see Troops#setHealth(int)
+	 */
 	private int health;
+	/**
+	 * Vitesse de déplacement de la troupe
+	 * 
+	 * @see Troops#getSpeed()
+	 * @see Troops#setSpeed(double)
+	 */
+	private double speed;
+	/**
+	 * Force de la troupe
+	 * 
+	 * @see Troops#getDamages()
+	 * @see Troops#setDamages(int
+	 */
 	private int damages;
-	private double maxY;
-	private double xTarget;
-	private double yTarget;
-	public void setxTarget(double xTarget) {
-		this.xTarget = xTarget;
-	}
-	public void setyTarget(double yTarget) {
-		this.yTarget = yTarget;
-	}
-	public Troops(Pane layer, Image image, double x, double y, String name, int productionCost, int productionTime,
-			double speed, int health, int damages) {
-		super(layer, image, x, y,50);
-		this.name = name;
-		this.productionCost = productionCost;
-		this.productionTime = productionTime;
-		this.speed = speed;
+	/**
+	 * Booléen qui indique si la troupe attaque
+	 * 
+	 * @see Troops#isAttacking()
+	 * @see Troops#setAttacking(boolean)
+	 */
+	private boolean attacking = true;
+	/**
+	 * Propriétaire de la cible
+	 */
+	private int owner;
+	/**
+	 * Château cible
+	 */
+	private Castle cible;
+
+	/**
+	 * Constructeur de Troops
+	 * @param layer
+	 * 	Plan
+	 * @param image
+	 * 	Image affichée de la troupe
+	 * @param x
+	 * 	Coordonnées x de la troupe
+	 * @param y
+	 * 	Coordonnées y de la troupe
+	 * @param speed
+	 * 	Vitesse de déplacement de la troupe
+	 * @param health
+	 * 	Santé de la troupe
+	 * @param damages
+	 * 	Force de la troupe
+	 * @param owner
+	 * 	Propriétaire de la troupe
+	 */
+	public Troops(Pane layer, Image image, double x, double y, double speed, int health, int damages, int owner) {
+		super(layer, image, x, y);
 		this.health = health;
-		this.damages = damages;
-		maxY = Settings.SCENE_HEIGHT - image.getHeight();
-	}
-	public double getMaxY() {
-		return maxY;
-	}
-	public void setMaxY(double maxY) {
-		this.maxY = maxY;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getProductionCost() {
-		return productionCost;
-	}
-	public void setProductionCost(int productionCost) {
-		this.productionCost = productionCost;
-	}
-	public int getProductionTime() {
-		return productionTime;
-	}
-	public void setProductionTime(int productionTime) {
-		this.productionTime = productionTime;
-	}
-	public double getSpeed() {
-		return speed;
-	}
-	public void setSpeed(double speed) {
 		this.speed = speed;
+		this.damages = damages;
+		this.owner = owner;
 	}
+
+	/**
+	 * Récupérer health
+	 * @return le nombre de point de vie actuel de la troupe
+	 */
 	public int getHealth() {
 		return health;
 	}
+
+	/**
+	 * Changer la valeur de health
+	 * @param health
+	 * 	Santé de la troupe
+	 */
 	public void setHealth(int health) {
 		this.health = health;
 	}
-	public int getDamages() {
-		return damages;
-	}
-	public void setDamages(int damages) {
-		this.damages = damages;
-	}
-	
-	public void checkRemovability() {
 
-		if ( !(x > (xTarget + 1) || x < (xTarget - 1)) && !(y > (yTarget + 1) || y < (yTarget - 1)) )
-			
-			remove();
+	/**
+	 * Récupérer attacking
+	 * @return attacking, true si la troupe attaque false sinon 
+	 */
+	public boolean isAttacking() {
+		return attacking;
+	}
+
+	/**
+	 * Changer la cible de la troupe
+	 * @param c
+	 * 	Château cible
+	 */
+	public void setCible(Castle c) {
+		this.cible = c;
+	}
+
+	/**
+	 * Bouger la cible vers sa cible
+	 */
+	public void move2()
+	{
+		if(!isMoved()){
+
+			if(x > (cible.getX() + 1) || x < (cible.getX() - 1)) {
+
+				if (!Main.pause) {
+					if(x < cible.getX() && x + speed < cible.getX())
+					{
+						x += speed;
+						updateUI();
+					} else if(x < cible.getX() && x + speed > cible.getX()) {
+						x++;
+						updateUI();
+					}  else if(x > cible.getX() && x + speed > cible.getX()) {
+						x -= speed;
+						updateUI();
+					} else if(x < cible.getX() && x + speed > cible.getX()) {
+						x--;
+						updateUI();
+
+					}
+				}
+
+			}
+			else if(y > (cible.getY() + 1) || y < (cible.getY() - 1)) {
+
+				if (!Main.pause) {
+					if(y < cible.getY() && y + speed < cible.getY())
+					{
+						y += speed;
+						updateUI();
+					} else if(y < cible.getY() && y + speed > cible.getY()) {
+						y++;
+						updateUI();
+					} else if(y > cible.getY() && y + speed > cible.getY()) {
+						y -= speed;
+						updateUI();
+					} else if(y < cible.getY() && y + speed > cible.getY()) {
+						y--;
+						updateUI();
+					}
+				}
+
+			}
+
+			else {
+				attacking = false;
+			}
+
+
+
+		}
+
+	}
+
+	/**
+	 * Appliquer les dommages de l'attaque au château cible
+	 */
+	public void makeDamages() {
+		int enemy = cible.getChevaliers();
+		if (enemy == 0) {
+			cible.setDuke(this.owner);
+		}
+		else {
+			System.out.println("Attaquant : " + damages + " Défenseur : " + cible.getTroops().get(0).getHealth());
+			if(damages > cible.getTroops().get(0).getHealth())
+				cible.getTroops().remove(0);
+			else
+				cible.getTroops().get(0).setHealth(cible.getTroops().get(0).getHealth()-damages);
+		}
 	}
 	
-	public void move()
-	{
-		
-		if(x > (xTarget + 1) || x < (xTarget - 1)) {
-			if(x < this.xTarget && x + speed < this.xTarget)
-			{
-				x += speed;
-			} else if(x < this.xTarget && x + speed > this.xTarget) {
-				x++;
-			}  else if(x > this.xTarget && x + speed > this.xTarget) {
-				x -= speed;
-			} else if(x < this.xTarget && x + speed > this.xTarget) {
-				x--;
-			}
-		}
-		if(y > (yTarget + 1) || y < (yTarget - 1)) {
-			if(y < this.yTarget && y + speed < this.yTarget)
-			{
-				y += speed;
-			} else if(y < this.yTarget && y + speed > this.yTarget) {
-				y++;
-			} else if(y > this.yTarget && y + speed > this.yTarget) {
-				y -= speed;
-			} else if(y < this.yTarget && y + speed > this.yTarget) {
-				y--;
-			}
-		}
+	/**
+	 * Créer la troupe de renfort
+	 */
+	public void makeReinforcement() {
+		cible.createTroop();
 	}
+
+
 }
