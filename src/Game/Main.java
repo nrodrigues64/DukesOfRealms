@@ -127,7 +127,7 @@ public class Main extends Application {
 								removeSprites(sprite.getATroops());
 								removeSprites(sprite.getRTroops());
 							}
-							
+
 						});
 						k.getCastles().forEach(sprite -> 
 						{
@@ -709,8 +709,6 @@ public class Main extends Application {
 
 	/**
 	 * Configurer le bouton OK du PopUp et afficher le PopUp
-	 * @param c
-	 * 	Château attaquant
 	 */
 	public void initButtonOkPseudo()
 	{
@@ -779,93 +777,93 @@ public class Main extends Application {
 			}
 		}
 	}
-/**
- * Créer IA et Gestion IA
- */
-public void IA() {
-		
+	/**
+	 * Créer IA et Gestion IA
+	 */
+	public void IA() {
+
 		Thread t = new Thread() {
-		    public void run() {		    	
-		  	  while(true) {
-		  		  if(!pause) {
-		  		  try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			public void run() {		    	
+				while(true) {
+					if(!pause) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						//pour tout les chateaux autres que les siens
+						for (int i = 0; i < k.getCastles().size(); i++) {
+							Castle c = k.getCastles().get(i);
+							if(c.getDuke()!=k.getHome().getDuke()) {
+								Random random = new Random();
+								int choice = random.nextInt(10);
+								int cible = i;
+
+								switch(choice) {
+								case 1:
+									c.incWaitingList(1,k.getHome().getDuke());
+									break;
+								case 2:
+									c.incWaitingList(2,k.getHome().getDuke());
+									break;
+								case 3:
+									while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
+									c.setOrder(1);
+									if (cible == 5) {
+										c.setCible(k.getHome());
+
+									}
+									else {
+										c.setCible(k.getCastles().get(cible));
+
+									}
+									break;
+								case 4:
+									c.levelUp(k.getHome().getDuke());
+									break;
+								case 5:
+									while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
+									c.setOrder(1);
+									if (cible == 5) {
+										c.setCible(k.getHome());
+
+									}
+									else {
+										c.setCible(k.getCastles().get(cible));
+
+									}
+									break;
+								case 6:
+									while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
+									c.setOrder(1);
+									if (cible == 5) {
+										c.setCible(k.getHome());
+
+									}
+									else {
+										c.setCible(k.getCastles().get(cible));
+
+									}
+									break;
+								case 7:
+									c.incWaitingList(2,k.getHome().getDuke());
+									break;
+								case 8:
+									c.incWaitingList(1,k.getHome().getDuke());
+									break;
+								}
+							}
+
+						}}
 				}
-		  		//pour tout les chateaux autres que les siens
-		  		  for (int i = 0; i < k.getCastles().size(); i++) {
-		  			  Castle c = k.getCastles().get(i);
-		  			  if(c.getDuke()!=k.getHome().getDuke()) {
-		  			  Random random = new Random();
-					  int choice = random.nextInt(10);
-					  int cible = i;
-					  
-					  switch(choice) {
-					  case 1:
-						  c.incWaitingList(1,k.getHome().getDuke());
-						  break;
-					  case 2:
-						  c.incWaitingList(2,k.getHome().getDuke());
-						  break;
-					  case 3:
-						  while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
-						  c.setOrder(1);
-						  if (cible == 5) {
-							  c.setCible(k.getHome());
-							 
-						  }
-						  else {
-							  c.setCible(k.getCastles().get(cible));
-							  
-						  }
-						  break;
-					  case 4:
-						  c.levelUp(k.getHome().getDuke());
-						  break;
-					  case 5:
-						  while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
-						  c.setOrder(1);
-						  if (cible == 5) {
-							  c.setCible(k.getHome());
-							 
-						  }
-						  else {
-							  c.setCible(k.getCastles().get(cible));
-							 
-						  }
-						  break;
-					  case 6:
-						  while(cible != 5 && k.getCastles().get(cible) == k.getCastles().get(i)) {cible = random.nextInt(6);}
-						  c.setOrder(1);
-						  if (cible == 5) {
-							  c.setCible(k.getHome());
-							
-						  }
-						  else {
-							  c.setCible(k.getCastles().get(cible));
-							  
-						  }
-						  break;
-					  case 7:
-						  c.incWaitingList(2,k.getHome().getDuke());
-						  break;
-					  case 8:
-						  c.incWaitingList(1,k.getHome().getDuke());
-						  break;
-					  	}
-					  }
-		  			  				
-		  			  }}
-		  		  }
-		  	  
-		  	  
-			    	 
-			    }};
-			    	t.start();
-			    
-			  
+
+
+
+			}};
+			t.start();
+
+
 	}
 
 	public static void main(String[] args) {

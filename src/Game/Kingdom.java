@@ -39,7 +39,7 @@ public class Kingdom {
 	 * @see Kingdom#setFreeZone(List)
 	 */
 	private List<Castle> freeZone;
-	
+
 	/**
 	 * Constructeur de Kingdom
 	 * @param home
@@ -52,7 +52,7 @@ public class Kingdom {
 		this.home = home;
 		this.castles = castles;
 	}
-	
+
 	/**
 	 * Récupérer home
 	 * @return le chateau du joueur
@@ -60,7 +60,7 @@ public class Kingdom {
 	public Castle getHome() {
 		return home;
 	}
-	
+
 	/**
 	 * Récupérer castles
 	 * @return la liste des châteaux ennemis
@@ -68,7 +68,7 @@ public class Kingdom {
 	public List<Castle> getCastles() {
 		return castles;
 	}
-		
+
 	/**
 	 * Récupérer freeZone
 	 * @return la liste des châteaux libres

@@ -26,5 +26,5 @@ public class Settings {
 	/**
 	 * Hauteur du plateau
 	 */
-    public static final double SCENE_HEIGHT = screenSize.getHeight() - 70;
+	public static final double SCENE_HEIGHT = screenSize.getHeight() - 70;
 }

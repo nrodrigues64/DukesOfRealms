@@ -20,7 +20,7 @@ import javafx.scene.layout.Pane;
  */
 public class Troops extends Sprite {
 	/**
-	 * Nombre de point de vie d'une troupe
+	 * Nombre de point(s) de vie(s) d'une troupe
 	 * 
 	 * @see Troops#getHealth()
 	 * @see Troops#setHealth(int)
@@ -85,7 +85,7 @@ public class Troops extends Sprite {
 
 	/**
 	 * Récupérer health
-	 * @return le nombre de point de vie actuel de la troupe
+	 * @return le nombre de point(s) de vie(s) actuel de la troupe
 	 */
 	public int getHealth() {
 		return health;
@@ -118,7 +118,7 @@ public class Troops extends Sprite {
 	}
 
 	/**
-	 * Bouger la cible vers sa cible
+	 * Bouger la troupe vers sa cible
 	 */
 	public void move2()
 	{
@@ -178,6 +178,8 @@ public class Troops extends Sprite {
 
 	/**
 	 * Appliquer les dommages de l'attaque au château cible
+	 * @param duc
+	 * Pour empêcher l'affichage de messages
 	 */
 	public void makeDamages(int duc) {
 		int enemy = cible.getChevaliers();
@@ -195,7 +197,7 @@ public class Troops extends Sprite {
 				cible.getTroops().get(0).setHealth(cible.getTroops().get(0).getHealth()-damages);
 		}
 	}
-	
+
 	/**
 	 * Créer la troupe de renfort
 	 */
