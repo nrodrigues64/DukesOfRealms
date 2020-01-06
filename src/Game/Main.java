@@ -264,7 +264,7 @@ public class Main extends Application {
 					contextMenu.getItems().addAll(levelup, former);
 					if(getSelected() != sprite)
 					{
-						MenuItem renfort = new MenuItem("Recevoir/Envoyer renfort(s)");
+						MenuItem renfort = new MenuItem("Recevoir troupe(s)");
 						renfort.setOnAction(new EventHandler<ActionEvent>() {
 							public void handle(ActionEvent e) {
 								initButtonOkRenfort(getSelected(),sprite);
@@ -325,7 +325,7 @@ public class Main extends Application {
 			contextMenu.getItems().addAll(duke, treasure, level, levelup, chevalier, former);
 			if(getSelected() != k.getHome())
 			{
-				MenuItem renfort = new MenuItem("Recevoir renfort(s)");
+				MenuItem renfort = new MenuItem("Recevoir troupe(s)");
 				renfort.setOnAction(new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent e) {
 						initButtonOkRenfort(getSelected(),k.getHome());
