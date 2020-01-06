@@ -19,7 +19,7 @@ Les joueurs disposent de châteaux générant des richesses avec lesquels ils po
 ### Lancement
 
 Au lancement vous devez saisir un entier qui déterminera votre nom durant le jeu qui fait office de pseudo.
-![pseudo](DoRpseudo.png)
+![pseudo](DoRPseudo.png)
 
 
 ### Régles du jeu
@@ -59,6 +59,7 @@ Le but du jeu est donc, à l'aide de ses différents menus, de conquérir l'ense
 Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" : ![FormerTroupe](DoRFormer.png)
 
 Une fenêtre PopUp s'ouvrira sur laquelle vous pourrez saisir un entier. ![SaisieTroupe](DoRSaisieTroupe.png)
+
 Cliquez ensuite sur le bouton OK pour valider votre saisie. Les troupes seront maintenant en cours de formation.
 
 Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. ![SaisieTroupeVerif](DoRSaisieTroupeVerif.png)
@@ -68,6 +69,7 @@ Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. 
 Pour attaquer un château il faut que celui-ci ne soit pas un allié. Vous aurez donc la possibilité de cliquer sur "Attaquer" : ![Attaquer](DoRAttaquer.png)
 
 De la même façon que vous avez formé des troupes, une fénêtre s'ouvre où vous pouvez saisir un chiffre qui correspond au nombre de troupe que vous désirez envoyer. ![SaisieTroupeA](DoRSaisieTroupeA.png)
+
 Cliquez ensuite sur OK pour valider votre saisie. Vous pourrez ensuite apercevoir vos troupes se diriger vers votre cible.
 
 #### Avoir plus de ressources
