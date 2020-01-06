@@ -22,7 +22,9 @@ Au lancement vous devez saisir un entier qui déterminera votre nom durant le je
 
 ### Règles du jeu
 
-Un fois votre pseudo saisie le jeu commence. Vous pourrez apercevoir plusieurs châteaux identiques qui sont des châteaux de barons dont vous pouvais vous emparer pour gagner. Pour ce faire il vous faudra des troupes (vous disposez d'une troupe au commencement), pour former ces troupes il vous faut avoir assez de trésorerie (ici le florin qui est la monnaie du jeu).
+Un fois votre pseudo saisie le jeu commence. Vous pourrez apercevoir plusieurs châteaux identiques qui sont des châteaux de barons dont vous pouvais vous emparer pour gagner. Pour ce faire il vous faudra des troupes (vous disposez de 5 troupes au commencement), pour former ces troupes il vous faut avoir assez de trésorerie (ici le florin qui est la monnaie du jeu).
+
+L'IA jouera à la place des barons ainsi vous verrez que les autres châteaux sont actifs et jouent donc au même jeu que vous. Leur objectif est le même que le votre : conquérir tous les autres châteaux.
 
 Votre château est le château différent des autres qui se distingue facilement par sa couleur :
 
@@ -133,6 +135,10 @@ Un message s'affiche sur la ligne de commande vous permettant de savoir combien 
 ## Fonctionnalité
 
 Liste des fonctionnalités de notre jeu
+### IA
+
+On a dévelloppé une IA basique qui va à intervalle de 1 sec réaliser une action au hasard pour chaques châteaux présents sur le terrain exepté les vôtres.
+Par soucis de visibilité on a fait en sorte que seul les messages de prises de château soit visible sur la ligne de commande pour les châteaux controllés par l'IA.
 
 ### Formation d'une troupe
 
@@ -174,3 +180,4 @@ Une fois le bouton OK pressé, les troupes disponibles dans le château émetteu
 - Un décor plus enrichi.
 - Plus de liberté dans le choix du pseudo.
 - Un bandeau informatif qui affiche les stats du château sélectionné.
+- Affichage de Victoire/Défaite plus claire.
