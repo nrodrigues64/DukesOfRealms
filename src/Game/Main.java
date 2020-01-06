@@ -135,7 +135,6 @@ public class Main extends Application {
 						});
 						for (int i = 0; i< k.getCastles().size(); i++)
 						{	
-							
 							k.getCastles().get(i).makeOrder(k.getHome().getDuke());
 						}
 					}
