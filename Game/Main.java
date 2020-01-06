@@ -94,7 +94,7 @@ public class Main extends Application {
 				
 				if(pseudo) {
 				
-					if (removeActiveKey("P")) {
+					if (removeActiveKey("SPACE")) {
 		                System.out.println("game paused");
 		                pause = !pause;
 		            }
