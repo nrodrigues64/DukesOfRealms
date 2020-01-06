@@ -105,9 +105,9 @@ Un message s'affiche sur la ligne de commande indiquant l'attaque de la troupe a
 ##### Envoyer des renforts
 
 Pour envoyer des renforts il vous faudra cliquer sur le bouton "Recevoir troupe(s)" du château receveur. 
-![Renfort](DoRRenfort.png)
+![Renfort](imageRM/DoRRenfort.png)
 Une fenêtre pop-up s'ouvrira sur laquelle vous pourrez, comme pour l'attaque et la formation, saisir un chiffre correspondant au nombre de troupe(s) à envoyer en renfort au château.
-![SaisieR](DoRSaisieR.png)
+![SaisieR](imageRM/DoRSaisieR.png)
 
 Un message s'affiche sur la ligne de commande indiquant le château donneur et le nombre de troupes données.
 
