@@ -39,7 +39,7 @@ public class Castle extends Sprite {
 	/**
 	 * 
 	 */
-	private Order ordreCourant;
+	private Order ordreCourant = null;
 	/**
 	 * Trésor du château
 	 */
@@ -60,6 +60,10 @@ public class Castle extends Sprite {
 	 * Troupes attaquantes du château
 	 */
 	private List<Troops> Atroops = new ArrayList<>();
+	/**
+	 * Troupes de renfort pour allié
+	 */
+	private List<Troops> Rtroops = new ArrayList<>();
 
 	/**
 	 * Nombre d'unité en attente de formation
@@ -162,7 +166,6 @@ public class Castle extends Sprite {
 	public List<Troops> getTroops() {
 		return troops;
 	}
-	
 	/**
 	 * Récupérer ATroops
 	 * @return la liste des troupes attaquantes
@@ -170,6 +173,13 @@ public class Castle extends Sprite {
 	public List<Troops> getATroops() {
 		return Atroops;
 	}	
+	/**
+	 * Récupérer RTroops
+	 * @return la liste des troupes de renforts
+	 */
+	public List<Troops> getRTroops() {
+		return Rtroops;
+	}
 
 	/**
 	 * Créer une troupe et l'ajoute à la liste
@@ -214,7 +224,6 @@ public class Castle extends Sprite {
 	 * 	Nombre à incrémenter à waitinglist
 	 */
 	public void incWaitingList(int nb) {
-		waitinglist+=nb;
 		//vérification de la possibilité financière de créer des troupes
 		if(treasure >= 125*(nb+1)) {
 			waitinglist+=nb;
@@ -244,27 +253,30 @@ public class Castle extends Sprite {
 	{
 		ordreCourant = new Order(c, nbTroupe);
 		if(ordreCourant.getNbTroops() > getChevaliers()) {
-			System.out.println("pas assez de troupe");
+			System.out.println("Pas assez de troupe(s).");
 			return;
 		}
 		else {
-		for(int i = 0 ; i < ordreCourant.getNbTroops() ; i++)
-		{
-			System.out.println("A l'assaut");
-			int size = Atroops.size();
-			Atroops.add(troops.get(0));
-			troops.remove(0);
-			Atroops.get(size).setCible(ordreCourant.getTarget());
-			Atroops.get(size).addToLayer();
-			
-		}}
+			for(int i = 0 ; i < ordreCourant.getNbTroops() ; i++)
+			{
+				System.out.println("A l'assaut ! Le château du Duc n°" + duke + " envoie " + nbTroupe + " troupe(s) pour assiéger le château du duc n°"+ c.getDuke()+".");
+				int size = Atroops.size();
+				Atroops.add(troops.get(0));
+				troops.remove(0);
+				Atroops.get(size).setCible(ordreCourant.getTarget());
+				Atroops.get(size).addToLayer();
+				
+			}
+		}
+		ordreCourant = null;
+		System.out.println("Ordre d'attaque terminé.");
 
 	}
 	
 	/**
 	 * Met à jours la liste des troupes attaquante
 	 */
-	public void UpdateTroops() {
+	public void UpdateTroopsA() {
 		for (int i = 0; i<Atroops.size(); i++) 
 		{
 			//les toupes n'attaquent plus = elles sont arrivées a destination, il faut les supprimer et infliger les degats
@@ -283,16 +295,86 @@ public class Castle extends Sprite {
 	}
 	
 	/**
+	 * Envoyer des troupes en renfort au château c
+	 * @param c
+	 * 	Château allié
+	 * @param nbTroupe
+	 * 	Nombre de troupe à envoyer
+	 */
+	public void renfort(Castle c, int nbTroupe)
+	{
+			ordreCourant = new Order(c, nbTroupe);
+			if(ordreCourant.getNbTroops() > getChevaliers()) {
+				System.out.println("Pas assez de troupe(s).");
+				return;
+			}
+			else {
+				for(int i = 0 ; i < ordreCourant.getNbTroops() ; i++)
+				{
+					System.out.println("En renfort ! Le château du Duc n°" + duke + " envoie " + nbTroupe + " troupe(s) pour renforcer un château allié.");
+					int size = Rtroops.size();
+					Rtroops.add(troops.get(0));
+					troops.remove(0);
+					Rtroops.get(size).setCible(ordreCourant.getTarget());
+					Rtroops.get(size).addToLayer();
+					
+				}
+			}	
+	}
+	
+	/**
+	 * Met à jours la liste des troupes de renforts
+	 */
+	public void UpdateTroopsR() {
+		for (int i = 0; i<Rtroops.size(); i++) 
+		{
+			//les toupes n'attaquent plus = elles sont arrivées a destination, il faut les supprimer et infliger les degats
+			if(!Rtroops.get(i).isAttacking()) {
+				Rtroops.get(i).makeReinforcement();
+				Rtroops.get(i).setMoved(true);
+			}
+			try {
+				Rtroops.get(i).move2();
+				} catch (IndexOutOfBoundsException e) {
+				//
+
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	/**
 	 * Augmenter le château d'un niveau
 	 */
 	public void levelUp()
 	{
-		if(this.getTreasure() < 1000*(this.level+1))
+		if(treasure < 1000*(level+1))
 		{
-			System.out.println("Trésor insuffisant.");
+			System.out.println("Trésor insuffisant. Il vous faut: "+ (1000*(this.level+1)) +" florins.");
 		} else {
-			System.out.println("Amélioration du chateau");
-			this.treasure = (this.getTreasure()-1000*(this.getLevel()+1));
+			Thread t = new Thread() {
+			      
+				public void run() {	  
+						try {
+							System.out.println("L'amélioration du château sera fini dans " + (5*level) + " secondes. Cela vous a couté " + 1000 * (level+1) + "florins, il vous reste: " + (treasure-1000 * (level+1)) + "florin(s)." );
+							treasure = (treasure - (1000 * (level+1)));
+							Thread.sleep(5000 * level);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			    	
+						if (!Main.pause) {
+			    		
+							level++;
+							
+						}
+					}
+				
+			}; 
+			t.start();	
 		}
 	}
 	

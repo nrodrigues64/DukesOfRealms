@@ -40,6 +40,7 @@ public class Main extends Application {
 	private Stage dialogAttack = new Stage();
 	private Stage dialogForm = new Stage();
 	private Stage dialogPseudo = new Stage();
+	private Stage dialogRenfort = new Stage();
 	private Image castleImage;
 	private Image castleEnemy;
 	private Kingdom k;
@@ -54,6 +55,8 @@ public class Main extends Application {
 	static boolean pause = false;
 	private Button addNbTroupeAttack = new Button();
 	private TextField textFieldAttack = new TextField();
+	private Button addNbTroupeRenfort = new Button();
+	private TextField textFieldRenfort = new TextField();
 	private Button addNbTroupeForm = new Button();
 	private TextField textFieldForm = new TextField();
 	private Button choixPseudo = new Button();
@@ -62,6 +65,7 @@ public class Main extends Application {
 	GridPane gridPaneForm = new GridPane();
 	GridPane gridPanePseudo = new GridPane();
 	GridPane gridPaneAttack = new GridPane();
+	GridPane gridPaneRenfort = new GridPane();
 	Group root;
 
 	@Override
@@ -100,10 +104,12 @@ public class Main extends Application {
 		            }
 					if (!pause) {
 						
-						k.getHome().UpdateTroops();
+						k.getHome().UpdateTroopsA();
+						k.getHome().UpdateTroopsR();
 						for (int i = 0; i< k.getCastles().size(); i++)
 						{
-							k.getCastles().get(i).UpdateTroops();
+							k.getCastles().get(i).UpdateTroopsA();
+							k.getCastles().get(i).UpdateTroopsR();
 						}
 						// update sprites in scene
 						k.getHome().updateUI();
@@ -113,11 +119,13 @@ public class Main extends Application {
 						//player.checkRemovability();
 						removeSprites(k.getHome().getTroops());
 						removeSprites(k.getHome().getATroops());
+						removeSprites(k.getHome().getRTroops());
 						k.getCastles().forEach(sprite -> 
 						{
 							if(sprite.getDuke() == k.getHome().getDuke())
 							{
 								removeSprites(sprite.getATroops());
+								removeSprites(sprite.getRTroops());
 							}
 						});
 					}
@@ -203,7 +211,7 @@ public class Main extends Application {
 				Treasure = Treasure.concat(Integer.toString(sprite.getTreasure()));
 				String Level = "Level : ";
 				Level = Level.concat(Integer.toString(sprite.getLevel()));
-				String chevaliers = "chevaliers : ";
+				String chevaliers = "Troupe(s) : ";
 				chevaliers = chevaliers.concat(Integer.toString(sprite.getChevaliers()));
 
 				MenuItem chevalier= new MenuItem(chevaliers);
@@ -220,19 +228,32 @@ public class Main extends Application {
 					//
 					MenuItem levelup = new MenuItem("Level Up");
 					levelup.setOnAction(evt -> sprite.levelUp());
-					MenuItem former = new MenuItem("Former un chevalier");
+					MenuItem former = new MenuItem("Former troupe(s)");
 					former.setOnAction(new EventHandler<ActionEvent>() {
 						 public void handle(ActionEvent e) {
 								
 								initButtonOkForm(sprite);
 							e.consume();
-						}});				
+						}});
+					contextMenu.getItems().addAll(levelup, former);
+					if(getSelected() != sprite)
+					{
+						MenuItem renfort = new MenuItem("Recevoir/Envoyer renfort(s)");
+						renfort.setOnAction(new EventHandler<ActionEvent>() {
+							public void handle(ActionEvent e) {
+								initButtonOkRenfort(getSelected(),sprite);
+								e.consume();
+							}
+						});
+						
+						contextMenu.getItems().add(renfort);
+					}
 					MenuItem select = new MenuItem("Select");
 					if(sprite.isSelected())
 						select.setText("Selected");
 					select.setOnAction(evt -> selected(sprite));
 					
-					contextMenu.getItems().addAll(levelup, former, select);
+					contextMenu.getItems().add(select);
 				} else {
 					
 					MenuItem attack = new MenuItem("Attaquer");
@@ -256,7 +277,7 @@ public class Main extends Application {
 			Treasure = Treasure.concat(Integer.toString(k.getHome().getTreasure()));
 			String Level = "Level : ";
 			Level = Level.concat(Integer.toString(k.getHome().getLevel()));
-			String chevaliers = "chevaliers : ";
+			String chevaliers = "Troupe(s) : ";
 			chevaliers = chevaliers.concat(Integer.toString(k.getHome().getChevaliers()));
 			
 			
@@ -268,20 +289,32 @@ public class Main extends Application {
 			
 			levelup.setOnAction(evt -> k.getHome().levelUp());
 			
-			MenuItem former = new MenuItem("Former un chevalier");
+			MenuItem former = new MenuItem("Former troupe(s)");
 			former.setOnAction(new EventHandler<ActionEvent>() {
 				 public void handle(ActionEvent e) {
 						initButtonOkForm(k.getHome());
 						
 					e.consume();
 				}});
-			
+			contextMenu.getItems().addAll(duke, treasure, level, levelup, chevalier, former);
+			if(getSelected() != k.getHome())
+			{
+				MenuItem renfort = new MenuItem("Recevoir renfort(s)");
+				renfort.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						initButtonOkRenfort(getSelected(),k.getHome());
+						e.consume();
+					}
+				});
+				
+				contextMenu.getItems().add(renfort);
+			}
 			MenuItem select = new MenuItem("Select");
 			if(k.getHome().isSelected())
 				select.setText("Selected");
 			select.setOnAction(evt -> selected(k.getHome()));
 			
-			contextMenu.getItems().addAll(duke, treasure, level, levelup, chevalier, former, select);
+			contextMenu.getItems().add(select);
 			contextMenu.show(k.getHome().getView(), e.getScreenX(), e.getScreenY());
 		});
 	}
@@ -445,10 +478,10 @@ public class Main extends Application {
 			            // checking valid integer using parseInt() method 
 			            Integer.parseInt(textFieldAttack.getText());		   
 						saisieTroupe(c,c1);
-						dialogForm.close(); 
+						dialogAttack.close(); 
 			        }catch (NumberFormatException e1){ 
 			        	Label label = new Label("Saisissez un entier");
-			        	gridPaneForm.add(label, 0, 2);
+			        	gridPaneAttack.add(label, 0, 2);
 			        	
 				    } 
 					
@@ -470,6 +503,74 @@ public class Main extends Application {
 		nbT = Integer.parseInt(textFieldAttack.getText());
 		dialogAttack.close();
 		c.attack2(c1,nbT);
+	}
+	
+	/**
+	 * Initialiser le PopUp (Fenêtre) pour saisie de troupe à envoyer en renfort
+	 */
+	public void initStageRenfort()
+	{
+		//Configuration de la grille du la fenêtre
+        
+        gridPaneRenfort.setVgap(10);
+        gridPaneRenfort.setHgap(10);
+        gridPaneRenfort.setPadding(new Insets(10));
+        
+        //Création des items présents dans la fenêtre
+		Label label = new Label("Saisissez un nombre de troupe à envoyer en renfort");
+		addNbTroupeRenfort.setText("OK");	
+		
+		//Ajout des items à la grille
+		gridPaneRenfort.add(label, 0, 0);
+        gridPaneRenfort.add(textFieldRenfort, 0, 1);
+        gridPaneRenfort.add(addNbTroupeRenfort, 0, 3, 2, 1);
+        GridPane.setHalignment(addNbTroupeRenfort, HPos.CENTER);       
+        dialogRenfort.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(gridPaneRenfort);
+        dialogRenfort.setScene(scene);
+	}
+	
+	/**
+	 * Configurer le bouton OK du PopUp et afficher le PopUp
+	 * @param c
+	 * 	Château envoie renfort
+	 * @param c1
+	 * 	Château cible
+	 */
+	public void initButtonOkRenfort(Castle c,Castle c1)
+	{
+		addNbTroupeRenfort.setOnAction(new EventHandler<ActionEvent>() {
+			 public void handle(ActionEvent e) {
+					try 
+			        { 
+			            // checking valid integer using parseInt() method 
+			            Integer.parseInt(textFieldRenfort.getText());		   
+						saisieTroupeRenfort(c,c1);
+						dialogForm.close(); 
+			        }catch (NumberFormatException e1){ 
+			        	Label label = new Label("Saisissez un entier");
+			        	gridPaneForm.add(label, 0, 2);
+			        	
+				    } 
+					
+					
+				e.consume();
+			}});
+		dialogRenfort.show();	
+	}
+	
+	/**
+	 * Récupérer le nombre de troupe pour l'attaque et attaquer
+	 * @param c
+	 * 	Château envoie renfort
+	 * @param c1
+	 * 	Château cible
+	 */
+	public void saisieTroupeRenfort(Castle c, Castle c1)
+	{	
+		nbT = Integer.parseInt(textFieldRenfort.getText());
+		dialogRenfort.close();
+		c.renfort(c1,nbT);
 	}
 	
 	/**
@@ -533,8 +634,10 @@ public class Main extends Application {
 	{	
 		nbT = Integer.parseInt(textFieldForm.getText());
 		dialogForm.close();
-		c.incWaitingList(nbT-1);
+		c.incWaitingList(nbT);
 	}
+	
+	
 	
 	/**
 	 * Initialiser le PopUp (Fenêtre) pour saisie des troupes à former
@@ -585,6 +688,7 @@ public class Main extends Application {
 					            createPlayer();
 								initStageAttack();
 								initStageForm();
+								initStageRenfort();
 					            pseudo = true;
 								dialogPseudo.close(); 
 					        }catch (NumberFormatException e1){ 

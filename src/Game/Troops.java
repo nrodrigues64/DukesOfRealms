@@ -55,7 +55,7 @@ public class Troops extends Sprite {
 	 * Château cible
 	 */
 	private Castle cible;
-	
+
 	/**
 	 * Constructeur de Troops
 	 * @param layer
@@ -82,7 +82,7 @@ public class Troops extends Sprite {
 		this.damages = damages;
 		this.owner = owner;
 	}
-	
+
 	/**
 	 * Récupérer health
 	 * @return le nombre de point de vie actuel de la troupe
@@ -107,7 +107,7 @@ public class Troops extends Sprite {
 	public boolean isAttacking() {
 		return attacking;
 	}
-	
+
 	/**
 	 * Changer la cible de la troupe
 	 * @param c
@@ -116,7 +116,7 @@ public class Troops extends Sprite {
 	public void setCible(Castle c) {
 		this.cible = c;
 	}
-	
+
 	/**
 	 * Bouger la cible vers sa cible
 	 */
@@ -124,59 +124,58 @@ public class Troops extends Sprite {
 	{
 		if(!isMoved()){
 
-			    	  if(x > (cible.getX() + 1) || x < (cible.getX() - 1)) {
+			if(x > (cible.getX() + 1) || x < (cible.getX() - 1)) {
 
-			    	if (!Main.pause) {
-			    		if(x < cible.getX() && x + speed < cible.getX())
-						{
-							x += speed;
-							updateUI();
-						} else if(x < cible.getX() && x + speed > cible.getX()) {
-							x++;
-							updateUI();
-						}  else if(x > cible.getX() && x + speed > cible.getX()) {
-							x -= speed;
-							updateUI();
-						} else if(x < cible.getX() && x + speed > cible.getX()) {
-							x--;
-							updateUI();
+				if (!Main.pause) {
+					if(x < cible.getX() && x + speed < cible.getX())
+					{
+						x += speed;
+						updateUI();
+					} else if(x < cible.getX() && x + speed > cible.getX()) {
+						x++;
+						updateUI();
+					}  else if(x > cible.getX() && x + speed > cible.getX()) {
+						x -= speed;
+						updateUI();
+					} else if(x < cible.getX() && x + speed > cible.getX()) {
+						x--;
+						updateUI();
 
-						}
-			        }
+					}
+				}
 
-			      }
-			    	  else if(y > (cible.getY() + 1) || y < (cible.getY() - 1)) {
+			}
+			else if(y > (cible.getY() + 1) || y < (cible.getY() - 1)) {
 
-			    	if (!Main.pause) {
-			    		if(y < cible.getY() && y + speed < cible.getY())
-						{
-							y += speed;
-							updateUI();
-						} else if(y < cible.getY() && y + speed > cible.getY()) {
-							y++;
-							updateUI();
-						} else if(y > cible.getY() && y + speed > cible.getY()) {
-							y -= speed;
-							updateUI();
-						} else if(y < cible.getY() && y + speed > cible.getY()) {
-							y--;
-							updateUI();
-						}
-			        }
+				if (!Main.pause) {
+					if(y < cible.getY() && y + speed < cible.getY())
+					{
+						y += speed;
+						updateUI();
+					} else if(y < cible.getY() && y + speed > cible.getY()) {
+						y++;
+						updateUI();
+					} else if(y > cible.getY() && y + speed > cible.getY()) {
+						y -= speed;
+						updateUI();
+					} else if(y < cible.getY() && y + speed > cible.getY()) {
+						y--;
+						updateUI();
+					}
+				}
 
-			      }
+			}
 
-			    	  else {
-			    	System.out.println("test");
-			    	attacking = false;
-			    }
+			else {
+				attacking = false;
+			}
 
 
 
 		}
 
 	}
-	
+
 	/**
 	 * Appliquer les dommages de l'attaque au château cible
 	 */
@@ -194,5 +193,12 @@ public class Troops extends Sprite {
 		}
 	}
 	
-	
+	/**
+	 * Créer la troupe de renfort
+	 */
+	public void makeReinforcement() {
+		cible.createTroop();
+	}
+
+
 }
