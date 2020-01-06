@@ -66,19 +66,24 @@ Le but du jeu est donc, à l'aide de ses différents menus, de conquérir l'ense
 
 ##### Former une troupe
  
-Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorerie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" :  ![FormerTroupe](imageRM/DoRFormer.png)
+Pour former une troupe il faut donc que le château soit un château vous appartenant, et que votre trésorerie soit à la hauteur de votre demande. Vous aurez donc la possibilité de cliquer sur "Former troupe(s)" :  
+![FormerTroupe](imageRM/DoRFormer.png)
 
-Une fenêtre Pop-up s'ouvrira sur laquelle vous pourrez saisir un entier.  ![SaisieTroupe](imageRM/DoRSaisieTroupe.png)
+Une fenêtre Pop-up s'ouvrira sur laquelle vous pourrez saisir un entier.  
+![SaisieTroupe](imageRM/DoRSaisieTroupe.png)
 
 Cliquez ensuite sur le bouton OK pour valider votre saisie. Les troupes seront maintenant en cours de formation.
 
-Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. ![SaisieTroupeVerif](imageRM/DoRSaisieTroupeVerif.png)
+Si vous saisissez autre chose que des chiffres un message d'erreur s'affichera. 
+![SaisieTroupeVerif](imageRM/DoRSaisieTroupeVerif.png)
 
 ##### Attaquer un château
 
-Pour attaquer un château il faut que celui-ci ne soit pas un allié. Vous aurez donc la possibilité de cliquer sur "Attaquer" : ![Attaquer](imageRM/DoRAttaquer.png)
+Pour attaquer un château il faut que celui-ci ne soit pas un allié. Vous aurez donc la possibilité de cliquer sur "Attaquer" : 
+![Attaquer](imageRM/DoRAttaquer.png)
 
-De la même façon que vous avez formé des troupes, une fenêtre s'ouvre où vous pouvez saisir un chiffre qui correspond au nombre de troupe que vous désirez envoyer. ![SaisieTroupeA](imageRM/DoRSaisieTroupeA.png)
+De la même façon que vous avez formé des troupes, une fenêtre s'ouvre où vous pouvez saisir un chiffre qui correspond au nombre de troupe que vous désirez envoyer. 
+![SaisieTroupeA](imageRM/DoRSaisieTroupeA.png)
 
 Cliquez ensuite sur OK pour valider votre saisie. Vous pourrez ensuite apercevoir vos troupes se diriger vers votre cible.
 
@@ -110,7 +115,8 @@ Un message s'affiche sur la ligne de commande indiquant le château donneur et l
 
 Pour vous enrichir la seule solution est d'attendre, votre trésorerie augmente automatiquement au fil du temps. Bien évidemment il est possible de gagner plus d'argent, pour cela il vous faut augmenter le niveau de votre château ce qui augmentera vos revenus. De plus lorsque vous vous saisissez d'un château l'ensemble de sa trésorerie reste à votre disposition.
 
-Pour augmenter le niveau de votre château cliquez sur Level Up : ![LevelUp](imageRM/DoRLevelUp.png)
+Pour augmenter le niveau de votre château cliquez sur Level Up : 
+![LevelUp](imageRM/DoRLevelUp.png)
 
 Un message s'affiche sur la ligne de commande vous permettant de savoir combien de temps prendra l'amélioration.
 
