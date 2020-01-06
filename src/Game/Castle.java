@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 
 import java.util.List;
+import java.util.Random;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -73,6 +74,14 @@ public class Castle extends Sprite {
 	 * Booléen qui indique si des troupe sont en formation
 	 */
 	private boolean formation = false;
+	/**
+	 * Prochaine action à effectuer pour l'ia
+	 */
+	private int order=0;
+	/**
+	 * Cible à attaquer si l'ordre le demande
+	 */
+	private Castle cible;
 	
 	/**
 	 * Constructeur du château
@@ -190,6 +199,22 @@ public class Castle extends Sprite {
 	public List<Troops> getRTroops() {
 		return Rtroops;
 	}
+	
+	/**
+	 * 
+	 * @param order
+	 */
+	public void setOrder(int order) {
+		this.order = order;
+	}
+	
+	/**
+	 * 
+	 * @param cible
+	 */
+	public void setCible(Castle cible) {
+		this.cible = cible;
+	}
 
 	/**
 	 * Créer une troupe et l'ajoute à la liste
@@ -233,14 +258,15 @@ public class Castle extends Sprite {
 	 * @param nb
 	 * 	Nombre à incrémenter à waitinglist
 	 */
-	public void incWaitingList(int nb) {
+	public void incWaitingList(int nb, int duc) {
 		//vérification de la possibilité financière de créer des troupes
 		if(treasure >= 125*(nb+1)) {
 			waitinglist+=nb;
 			incChevalier();
 			treasure -= 125*(nb+1);
 		}else {
-			System.out.println("Les réserves du trésor sont trop faibles pour créer autant de chevaliers");
+			if(duke == duc)
+				System.out.println("Les réserves du trésor sont trop faibles pour créer autant de chevaliers");
 		}
 	}
 	
@@ -259,7 +285,7 @@ public class Castle extends Sprite {
 	 * @param nbTroupe
 	 * 	Nombre de troupes utilisées pour l'attaque
 	 */
-	public void attack2(Castle c, int nbTroupe)
+	public void attack2(Castle c, int nbTroupe, int duc)
 	{
 		ordreCourant = new Order(c, nbTroupe);
 		if(ordreCourant.getNbTroops() > getChevaliers()) {
@@ -269,7 +295,8 @@ public class Castle extends Sprite {
 		else {
 			for(int i = 0 ; i < ordreCourant.getNbTroops() ; i++)
 			{
-				System.out.println("A l'assaut ! Le château du Duc n°" + duke + " envoie " + nbTroupe + " troupe(s) pour assiéger le château n°"+ c.getDuke()+".");
+				if(duc == duke)
+					System.out.println("A l'assaut ! Le château du Duc n°" + duke + " envoie " + nbTroupe + " troupe(s) pour assiéger le château n°"+ c.getDuke()+".");
 				int size = Atroops.size();
 				Atroops.add(troops.get(0));
 				troops.remove(0);
@@ -284,12 +311,12 @@ public class Castle extends Sprite {
 	/**
 	 * Met à jours la liste des troupes attaquante
 	 */
-	public void UpdateTroopsA() {
+	public void UpdateTroopsA(int duc) {
 		for (int i = 0; i<Atroops.size(); i++) 
 		{
 			//les toupes n'attaquent plus = elles sont arrivées a destination, il faut les supprimer et infliger les degats
 			if(!Atroops.get(i).isAttacking()) {
-				Atroops.get(i).makeDamages();
+				Atroops.get(i).makeDamages(duc);
 				Atroops.get(i).setMoved(true);
 			}
 			try {
@@ -356,17 +383,19 @@ public class Castle extends Sprite {
 	/**
 	 * Augmenter le château d'un niveau
 	 */
-	public void levelUp()
+	public void levelUp(int duc)
 	{
 		if(treasure < 1000*(level+1))
 		{
-			System.out.println("Trésor insuffisant. Il vous faut: "+ (1000*(this.level+1)) +" florins.");
+			if(duke == duc)
+				System.out.println("Trésor insuffisant. Il vous faut: "+ (1000*(this.level+1)) +" florins.");
 		} else {
 			Thread t = new Thread() {
 			      
 				public void run() {	  
 						try {
-							System.out.println("L'amélioration du château sera fini dans " + (5*level) + " secondes. Cela vous a couté " + 1000 * (level+1) + "florins, il vous reste: " + (treasure-1000 * (level+1)) + "florin(s)." );
+							if(duc == duke)
+								System.out.println("L'amélioration du château sera fini dans " + (5*level) + " secondes. Cela vous a couté " + 1000 * (level+1) + "florins, il vous reste: " + (treasure-1000 * (level+1)) + "florin(s)." );
 							treasure = (treasure - (1000 * (level+1)));
 							Thread.sleep(5000 * level);
 						} catch (InterruptedException e) {
@@ -391,5 +420,26 @@ public class Castle extends Sprite {
 	 */
 	public void incMoney() {
 		treasure += 50 +(int)((level-1)*30) ;
+	}
+	
+	/**
+	 * envoie l'ordre d'attaquer
+	 */
+	public void makeOrder(int duc) {
+			Random random = new Random();
+					//random.nextInt(this.getChevaliers())-2;
+			int a = this.getChevaliers();
+			if (a <1) 
+			{
+				a=1;
+			}
+			int nbtroupes = random.nextInt(a);
+	
+			if (order == 1) {
+				for(int i = 0; i<nbtroupes; i++) {
+					this.attack2(cible, 1,duc);
+				}
+				this.setOrder(0);
+			}
 	}
 }
