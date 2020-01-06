@@ -46,7 +46,7 @@ Si le chateau est allié vous aurez les options suivantes :
 
 Si le château n'est pas allié vous aurez les options suivantes :
 
-![MenuChâteauE](DoRMenuChâteauE.png)
+![MenuChâteauE](DoRMenuChateauE.png)
 
 Ce menu à des options similaires au menu allié, Owner, Treasure, Level, Troupe(s) y sont présents le changement est le fait de pouvoir attaquer le château.
 
