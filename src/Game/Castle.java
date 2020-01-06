@@ -20,8 +20,8 @@ import javafx.scene.layout.Pane;
  * <p>
  * Un château est caractérisé par les informations suivantes :
  * <ul>
- * <li>Hérite des même attributs qu'un sprite</li>
- * <li>Un duc qui est un ID pour identifier le château du joueur</li>
+ * <li>Hérite des mêmes attributs qu'un sprite</li>
+ * <li>Un duc qui est un ID pour identifier le château</li>
  * <li>Un trésor</li>
  * <li>Un niveau</li>
  * </ul>
@@ -38,7 +38,7 @@ public class Castle extends Sprite {
 	 */
 	private int duke;
 	/**
-	 * 
+	 * Ordre courant de déplacement
 	 */
 	private Order ordreCourant = null;
 	/**
@@ -50,7 +50,7 @@ public class Castle extends Sprite {
 	 */
 	private int level;	
 	/**
-	 * Booléen qui indique si le château est sélectionner pour l'attaque
+	 * Booléen qui indique si le château est sélectionné pour l'attaque
 	 */
 	private boolean selected = false;
 	/**
@@ -67,11 +67,11 @@ public class Castle extends Sprite {
 	private List<Troops> Rtroops = new ArrayList<>();
 
 	/**
-	 * Nombre d'unité en attente de formation
+	 * Nombre de troupe(s) en attente de formation
 	 */
 	private int waitinglist = 0; //le nombre d'unité en attente de formation
 	/**
-	 * Booléen qui indique si des troupe sont en formation
+	 * Booléen qui indique si des troupes sont en formation
 	 */
 	private boolean formation = false;
 	/**
@@ -99,15 +99,9 @@ public class Castle extends Sprite {
 	 * Trésor
 	 * @param level
 	 * Level
+	 * @param nbTroupe
+	 * Nombre de troupe(s) de base dans le château
 	 */
-	public Castle(Pane layer, Image image, double x, double y,int duke, int treasure, int level) {
-		super(layer,image, x, y);
-		this.duke = duke;
-		this.treasure = treasure;
-		this.level = level;
-		addToLayer();	
-	}
-	
 	public Castle(Pane layer, Image image, double x, double y,int duke, int treasure, int level, int nbTroupe) {
 		super(layer,image, x, y);
 		this.duke = duke;
@@ -118,7 +112,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Initialise met des troupes dans les châteaux neutres
+	 * Initialiser des troupes dans les châteaux
 	 */
 	private void init(int nbTroupe) {
 		for(int i = 0; i < nbTroupe; i++)
@@ -170,7 +164,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Change la valeur de selected
+	 * Changer la valeur de selected
 	 * @param selected
 	 * Booléen qui indique si le château est sélectionné
 	 */
@@ -185,6 +179,7 @@ public class Castle extends Sprite {
 	public List<Troops> getTroops() {
 		return troops;
 	}
+	
 	/**
 	 * Récupérer ATroops
 	 * @return la liste des troupes attaquantes
@@ -192,6 +187,7 @@ public class Castle extends Sprite {
 	public List<Troops> getATroops() {
 		return Atroops;
 	}	
+	
 	/**
 	 * Récupérer RTroops
 	 * @return la liste des troupes de renforts
@@ -201,7 +197,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * 
+	 * Changer order
 	 * @param order
 	 */
 	public void setOrder(int order) {
@@ -209,7 +205,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * 
+	 * Changer la cible du château
 	 * @param cible
 	 */
 	public void setCible(Castle cible) {
@@ -217,7 +213,7 @@ public class Castle extends Sprite {
 	}
 
 	/**
-	 * Créer une troupe et l'ajoute à la liste
+	 * Créer une troupe et l'ajouter à la liste
 	 */
 	public void createTroop()
 	{
@@ -226,7 +222,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Créer une troupe et l'ajouter au château
+	 * Créer une troupe
 	 */
 	public void incChevalier() {
 		Thread t = new Thread() {
@@ -254,7 +250,7 @@ public class Castle extends Sprite {
 		  }
 	
 	/**
-	 * Incrémenter la nombre de troupe en attente de formation
+	 * Incrémenter le nombre de troupe(s) en attente de formation
 	 * @param nb
 	 * 	Nombre à incrémenter à waitinglist
 	 */
@@ -309,7 +305,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Met à jours la liste des troupes attaquante
+	 * Mettre à jours la liste des troupes attaquantes
 	 */
 	public void UpdateTroopsA(int duc) {
 		for (int i = 0; i<Atroops.size(); i++) 
@@ -334,7 +330,7 @@ public class Castle extends Sprite {
 	 * @param c
 	 * 	Château allié
 	 * @param nbTroupe
-	 * 	Nombre de troupe à envoyer
+	 * 	Nombre de troupe(s) à envoyer
 	 */
 	public void renfort(Castle c, int nbTroupe)
 	{
@@ -358,7 +354,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * Met à jours la liste des troupes de renforts
+	 * Mettre à jours la liste des troupes de renforts
 	 */
 	public void UpdateTroopsR() {
 		for (int i = 0; i<Rtroops.size(); i++) 
@@ -423,7 +419,7 @@ public class Castle extends Sprite {
 	}
 	
 	/**
-	 * envoie l'ordre d'attaquer
+	 * Envoyer l'ordre d'attaquer(IA)
 	 */
 	public void makeOrder(int duc) {
 			Random random = new Random();

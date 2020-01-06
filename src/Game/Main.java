@@ -779,7 +779,9 @@ public class Main extends Application {
 			}
 		}
 	}
-
+/**
+ * Créer IA et Gestion IA
+ */
 public void IA() {
 		
 		Thread t = new Thread() {
