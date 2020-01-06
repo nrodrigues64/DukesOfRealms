@@ -269,7 +269,7 @@ public class Castle extends Sprite {
 		else {
 			for(int i = 0 ; i < ordreCourant.getNbTroops() ; i++)
 			{
-				System.out.println("A l'assaut ! Le château du Duc n°" + duke + " envoie " + nbTroupe + " troupe(s) pour assiéger le château du duc n°"+ c.getDuke()+".");
+				System.out.println("A l'assaut ! Le château du Duc n°" + duke + " envoie " + nbTroupe + " troupe(s) pour assiéger le château n°"+ c.getDuke()+".");
 				int size = Atroops.size();
 				Atroops.add(troops.get(0));
 				troops.remove(0);
@@ -278,8 +278,6 @@ public class Castle extends Sprite {
 				
 			}
 		}
-		ordreCourant = null;
-		System.out.println("Ordre d'attaque terminé.");
 
 	}
 	
