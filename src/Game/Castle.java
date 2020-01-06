@@ -96,18 +96,28 @@ public class Castle extends Sprite {
 		this.duke = duke;
 		this.treasure = treasure;
 		this.level = level;
-		init();
 		addToLayer();	
 	}
-		
-	/**
-	 * Initialise minX, maxX, minY, maxY, met une torupe dans le château
-	 */
-	private void init() {
-		Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), 1.6, 50, 20,duke);
-		troops.add(t);
+	
+	public Castle(Pane layer, Image image, double x, double y,int duke, int treasure, int level, int nbTroupe) {
+		super(layer,image, x, y);
+		this.duke = duke;
+		this.treasure = treasure;
+		this.level = level;
+		init(nbTroupe);
+		addToLayer();
 	}
 	
+	/**
+	 * Initialise met des troupes dans les châteaux neutres
+	 */
+	private void init(int nbTroupe) {
+		for(int i = 0; i < nbTroupe; i++)
+		{
+			Troops t = new Troops(this.getLayer(), new Image(getClass().getResource("/images/knight.png").toExternalForm(), 50, 50, true, true), this.getX(), this.getY(), 1.6, 50, 20,duke);
+			troops.add(t);
+		}
+	}
 	
 	/**
 	 * Récupérer duke

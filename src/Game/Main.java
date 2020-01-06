@@ -180,6 +180,32 @@ public class Main extends Application {
 		int i = 0;
 		
 		//Création au minimum de 5 château qui respecte les condition établie
+		while(i < 3)
+		{
+			//Coordonnées choisis aléatoirement dans les limites de la taille de l'écran
+			double x1 = random.nextInt((int)(Settings.SCENE_WIDTH -  castleEnemy.getWidth()) + 1);
+			double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleEnemy.getHeight()) + 1);
+			//Test de nom chevauchement de château
+			if(check_castle(lc,x1,y1)) {
+				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(5000), 1, 5);
+				lc.add(c);
+				i++;
+			}
+			
+		}
+		while(i < 4)
+		{
+			//Coordonnées choisis aléatoirement dans les limites de la taille de l'écran
+			double x1 = random.nextInt((int)(Settings.SCENE_WIDTH -  castleEnemy.getWidth()) + 1);
+			double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleEnemy.getHeight()) + 1);
+			//Test de nom chevauchement de château
+			if(check_castle(lc,x1,y1)) {
+				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(10000), 1, 10);
+				lc.add(c);
+				i++;
+			}
+			
+		}
 		while(i < 5)
 		{
 			//Coordonnées choisis aléatoirement dans les limites de la taille de l'écran
@@ -187,7 +213,7 @@ public class Main extends Application {
 			double y1 = random.nextInt((int)(Settings.SCENE_HEIGHT - castleEnemy.getHeight()) + 1);
 			//Test de nom chevauchement de château
 			if(check_castle(lc,x1,y1)) {
-				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(1000000), 1);
+				Castle c = new Castle(playfieldLayer,castleEnemy, x1, y1, random.nextInt(1000), random.nextInt(100000), 1, 20);
 				lc.add(c);
 				i++;
 			}
